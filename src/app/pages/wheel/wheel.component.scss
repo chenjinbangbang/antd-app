@@ -1,0 +1,21 @@
+.wheel {
+	.search{
+		margin-top: 20px;
+		display: flex;
+		align-items: center;
+		label{
+			display: flex;
+			align-items: center;
+			span{
+			}
+			.search-input{
+				margin-left: 10px;
+				width: 250px;
+			}
+		}
+
+		.search-btn{
+			margin-left: 20px;
+		}
+	}
+}
