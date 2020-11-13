@@ -13,12 +13,14 @@ import { AntdModule } from './module/antd/antd.module';
 import { WheelComponent } from './pages/wheel/wheel.component';
 import { WheelResultComponent } from './pages/wheel-result/wheel-result.component';
 import { FormsModule } from '@angular/forms';
+import { StepComponent } from './components/step/step.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WheelComponent,
-    WheelResultComponent
+    WheelResultComponent,
+    StepComponent
   ],
   imports: [
     BrowserModule,

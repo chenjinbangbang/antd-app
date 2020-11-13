@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NzButtonModule, NzInputModule, NzMenuModule, NzBreadCrumbModule  } from 'ng-zorro-antd';
+import {
+  NzButtonModule,
+  NzInputModule,
+  NzMenuModule,
+  NzBreadCrumbModule,
+  NzTableModule
+} from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [],
@@ -12,7 +18,8 @@ import { NzButtonModule, NzInputModule, NzMenuModule, NzBreadCrumbModule  } from
     NzButtonModule,
     NzInputModule,
     NzMenuModule,
-    NzBreadCrumbModule
+    NzBreadCrumbModule,
+    NzTableModule
   ]
 })
 export class AntdModule { }

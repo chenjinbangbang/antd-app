@@ -9,7 +9,37 @@
 			<span>活动：</span>
 			<input class="search-input" nz-input placeholder="请输入活动名称或活动ID" [(ngModel)]="search" id="search" />
 		</label>
-		<button class="search-btn" nz-button nzType="primary">搜索</button>
+		<button class="search-btn" nz-button nzType="primary" (click)="searchFn()">搜索</button>
+	</div>
+
+	<div class="table">
+		<nz-table #basicTable [nzData]="lists" [nzPageIndex]="pageIndex" nzPageSize="10" [nzLoading]="loading">
+			<thead>
+				<tr>
+					<th nzWidth="100px">活动ID</th>
+					<th nzWidth="120px">活动名称</th>
+					<th>活动时间</th>
+					<th>预热时间</th>
+					<th nzWidth="80px">状态</th>
+					<th nzWidth="360px">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let data of lists">
+					<td>{{data.id}}</td>
+					<td>{{data.activityName}}</td>
+					<td>{{data.activityTime}}</td>
+					<td>{{data.activityTimeHot}}</td>
+					<td>{{data.status}}</td>
+					<td class="operation">
+						<button nz-button>停止</button>
+						<button nz-button nzType="primary">编辑</button>
+						<button nz-button class="btn-success">抽奖结果</button>
+						<button nz-button nzType="danger">删除</button>
+					</td>
+				</tr>
+			</tbody>
+		</nz-table>
 	</div>
 	
 </div>
