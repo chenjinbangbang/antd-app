@@ -132,24 +132,33 @@ export class WheelSettingComponent implements OnInit {
     console.log(control);
     let val = control.value;
 
-    let reg = new RegExp(/[^\d;]/);
-    if (reg.test(val)) {
-      return { regError: true }
-    }
-
-    let arr = val.split(';');
-    console.log(arr);
-    for (let item of arr) {
-      if (!item) {
-        return { inputError: true }
+    if (val) {
+      let reg = new RegExp(/[^\d;]/);
+      if (reg.test(val)) {
+        return { regError: true };
       }
 
-      let num = Number(item);
-      if (num < 1 || num > 9999999999) {
-        return { rangeError: true }
+      let arr = val.split(';');
+      console.log(arr);
+      for (let i in arr) {
+        if (!arr[i]) {
+          return { inputError: true };
+        }
+
+        let num = Number(arr[i]);
+        if (num < 1 || num > 1000) {
+          return { rangeError: true };
+        }
+
+        for (let y in arr) {
+          if (i !== y) {
+            if (arr[i] === arr[y]) {
+              return { repeatError: true };
+            }
+          }
+        }
       }
     }
-
     return null;
   }
 
@@ -158,7 +167,8 @@ export class WheelSettingComponent implements OnInit {
     id: ['', [Validators.required]],
     goodsType: ['1', [Validators.required]],
     goodsName: ['', [Validators.required, Validators.maxLength(30)]],
-    goodsCost: ['', [Validators.required]],
+    goodsCost: [''], // 金额，奖品为现金时必填
+    goodsCandyNum: [''], // 糖果数量，奖品为糖果时必填
     goodsImg: ['', [Validators.required]],
     goodsDescribe: ['', [Validators.required, Validators.maxLength(500)]],
     goodsImgList: this.fb.array([]),
@@ -166,6 +176,8 @@ export class WheelSettingComponent implements OnInit {
     goodsNum: ['', [Validators.required]],
     goodsTotal: ['', [Validators.required]],
   })
+  prizeId: string = ''
+  // 奖品类型数据
   goodsTypeList: any[] = [{
     value: "1",
     name: "现金"
@@ -176,6 +188,11 @@ export class WheelSettingComponent implements OnInit {
     value: "3",
     name: "糖果"
   }]
+  goodsTypeData: object = {
+    '1': "现金",
+    '2': "实物奖品",
+    '3': "糖果"
+  }
 
   // 表格数据
   lists: any[] = [
@@ -183,9 +200,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0001',
       goods: '商品1',
       goodsImg: 'assets/1.png',
-      goodsType: '现金',
+      goodsType: '1',
       goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: 100,
+      goodsPrizeRate: "100;200",
       goodsNum: 50,
       goodsTotal: 5000
     },
@@ -193,9 +210,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0002',
       goods: '商品2',
       goodsImg: 'assets/2.png',
-      goodsType: '实体商品',
+      goodsType: '2',
       goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: 200,
+      goodsPrizeRate: "200",
       goodsNum: 20,
       goodsTotal: 1000
     },
@@ -203,9 +220,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0003',
       goods: '商品3',
       goodsImg: 'assets/2.png',
-      goodsType: '糖果',
+      goodsType: '3',
       goodsName: '网红笔记本',
-      goodsPrizeRate: '糖果不设置',
+      goodsPrizeRate: "10;400",
       goodsNum: '糖果不设置',
       goodsTotal: '糖果不设置',
     },
@@ -213,9 +230,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0004',
       goods: '商品4',
       goodsImg: 'assets/1.png',
-      goodsType: '现金',
+      goodsType: '1',
       goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: 100,
+      goodsPrizeRate: "10;100",
       goodsNum: 50,
       goodsTotal: 5000
     },
@@ -223,9 +240,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0005',
       goods: '商品5',
       goodsImg: 'assets/2.png',
-      goodsType: '实体商品',
+      goodsType: '2',
       goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: 200,
+      goodsPrizeRate: "10;400;90",
       goodsNum: 20,
       goodsTotal: 1000
     },
@@ -233,9 +250,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0006',
       goods: '商品6',
       goodsImg: 'assets/2.png',
-      goodsType: '糖果',
+      goodsType: '3',
       goodsName: '网红笔记本',
-      goodsPrizeRate: '糖果不设置',
+      goodsPrizeRate: "10;410;90",
       goodsNum: '糖果不设置',
       goodsTotal: '糖果不设置',
     },
@@ -243,9 +260,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0007',
       goods: '商品7',
       goodsImg: 'assets/1.png',
-      goodsType: '现金',
+      goodsType: '1',
       goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: 100,
+      goodsPrizeRate: "400;90",
       goodsNum: 50,
       goodsTotal: 5000
     },
@@ -253,9 +270,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0008',
       goods: '商品8',
       goodsImg: 'assets/2.png',
-      goodsType: '实体商品',
+      goodsType: '2',
       goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: 200,
+      goodsPrizeRate: "10;400;910",
       goodsNum: 20,
       goodsTotal: 1000
     },
@@ -263,9 +280,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW0009',
       goods: '商品9',
       goodsImg: 'assets/2.png',
-      goodsType: '糖果',
+      goodsType: '3',
       goodsName: '网红笔记本',
-      goodsPrizeRate: '糖果不设置',
+      goodsPrizeRate: "10;400;10",
       goodsNum: '糖果不设置',
       goodsTotal: '糖果不设置',
     },
@@ -273,9 +290,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW00010',
       goods: '商品10',
       goodsImg: 'assets/1.png',
-      goodsType: '现金',
+      goodsType: '1',
       goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: 100,
+      goodsPrizeRate: "10;400;90;110",
       goodsNum: 50,
       goodsTotal: 5000
     },
@@ -283,9 +300,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW00011',
       goods: '商品11',
       goodsImg: 'assets/2.png',
-      goodsType: '实体商品',
+      goodsType: '2',
       goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: 200,
+      goodsPrizeRate: "10;400;190",
       goodsNum: 20,
       goodsTotal: 1000
     },
@@ -293,9 +310,9 @@ export class WheelSettingComponent implements OnInit {
       id: 'MW00012',
       goods: '商品12',
       goodsImg: 'assets/2.png',
-      goodsType: '糖果',
+      goodsType: '3',
       goodsName: '网红笔记本',
-      goodsPrizeRate: '糖果不设置',
+      goodsPrizeRate: "10;200;90",
       goodsNum: '糖果不设置',
       goodsTotal: '糖果不设置',
     },
@@ -313,7 +330,7 @@ export class WheelSettingComponent implements OnInit {
     3: "删除"
   }
 
-  isVisible: boolean = true; // 模态框
+  isVisible: boolean = false; // 奖品模态框
   modalContent: string = ""; // 模态框标题
 
   constructor(
@@ -329,7 +346,8 @@ export class WheelSettingComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.form.value);
+    // console.log(this.form.value);
+
     // console.log(this.route)
     // console.log("获取动态路由", this.route.params); // 获取动态路由
     // console.log("获取get传值", this.route.queryParams); // 获取get传值
@@ -340,9 +358,9 @@ export class WheelSettingComponent implements OnInit {
     // let id: Observable<string> = this.route.params.pipe(map(p => p.id));
     // console.log(id)
 
-    this.route.params.subscribe(data => {
-      console.log(data)
-    })
+    // this.route.params.subscribe(data => {
+    //   console.log(data)
+    // })
 
     this.originForm = JSON.stringify(this.form.value);
   }
@@ -399,10 +417,35 @@ export class WheelSettingComponent implements OnInit {
     this.message.success('保存成功');
   }
 
+
+  // ===================================== 奖品设置 ============================================
+  // 点击设置奖品
+  settingPrize(e: MouseEvent, i, id) {
+    e.preventDefault();
+    console.log('选中的奖品', id);
+    this.prizeId = id;
+    this.isVisible = true;
+
+    this.prizeForm.patchValue(this.lists[i]);
+  }
+
+  // 取消奖品设置表单
+  prizeCancel(e: MouseEvent) {
+    console.log(e);
+    // e.preventDefault();
+    console.log('取消')
+    // this.prizeForm.reset();
+    console.log(this.prizeForm.controls);
+
+    this.isVisible = false;
+  }
+
   // 提交奖品设置表单
   submitPrizeForm(): void {
+    console.log('提交')
     console.log(this.prizeForm.value);
   }
+
 
   // 修改单个值
   // updateName() {

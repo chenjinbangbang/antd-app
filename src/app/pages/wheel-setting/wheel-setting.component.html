@@ -8,7 +8,7 @@
 	</nz-modal>
 
 	<nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="1000" [nzClosable]="false"
-		(nzOnCancel)="isVisible = false">
+		(nzOnCancel)="prizeCancel($event)">
 		<div class="wheel-modal">
 			<!-- <div class="modal-content">
 				<i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
@@ -42,8 +42,16 @@
 							</nz-form-control>
 						</div>
 
-						<div nz-col nzSpan="7" nzOffset="1">
-							<nz-form-label nzRequired nzFor="goodsCost">金额</nz-form-label>
+						<div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.goodsType === '1'">
+							<nz-form-label nzRequired nzFor="goodsCandyNum">金额</nz-form-label>
+							<nz-form-control nzHasFeedback nzErrorTip="请输入金额">
+								<nz-input-number formControlName="goodsCandyNum" [nzMin]="0" [nzStep]="1">
+								</nz-input-number>
+							</nz-form-control>
+						</div>
+
+						<div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.goodsType === '3'">
+							<nz-form-label nzRequired nzFor="goodsCost">糖果数量</nz-form-label>
 							<nz-form-control nzHasFeedback nzErrorTip="请输入金额">
 								<nz-input-number formControlName="goodsCost" [nzMin]="0" [nzStep]="0.01">
 								</nz-input-number>
@@ -76,7 +84,7 @@
 
 					<nz-form-item>
 						<div style="display: flex;">
-							<nz-form-label nzRequired>奖品实物图片</nz-form-label>
+							<nz-form-label>奖品实物图片</nz-form-label>
 							<div class="form-item-note">（限1M以内的JPG，PNG图片，最多4张图片）</div>
 						</div>
 
@@ -91,7 +99,7 @@
 						</div>
 					</nz-form-item>
 
-					<nz-form-item>
+					<nz-form-item *ngIf="true">
 						<div style="display: flex;">
 							<nz-form-label nzRequired nzFor="goodsPrizeRate">中奖概率</nz-form-label>
 							<div class="form-item-note">（请填写第几位抽奖人获奖，多个数据用半角;隔开）</div>
@@ -101,34 +109,37 @@
 							<textarea nz-input formControlName="goodsPrizeRate" id="goodsPrizeRate" maxlength="500"
 								placeholder="请输入中奖概率" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
 							<ng-template #goodsPrizeRateTip let-control>
-								<ng-container *ngIf="control.hasError('required')">请输入中奖概率</ng-container>
+								<ng-container *ngIf="control.hasError('required');">请输入中奖概率</ng-container>
 								<ng-container *ngIf="control.hasError('regError')">只能输入数字和半角;</ng-container>
 								<ng-container *ngIf="control.hasError('inputError')">多个数据用半角;隔开</ng-container>
-								<ng-container *ngIf="control.hasError('rangeError')">只能输入1-9999999999的正整数</ng-container>
+								<ng-container *ngIf="control.hasError('rangeError')">只能输入1-1000的正整数</ng-container>
+								<ng-container *ngIf="control.hasError('repeatError')">抽奖概率不允许重复</ng-container>
 							</ng-template>
 						</nz-form-control>
 						<div class="text-length">{{prizeForm.value.goodsPrizeRate.length}}/500</div>
 					</nz-form-item>
 
-					<nz-form-item>
-						<nz-form-label nzRequired nzFor="goodsNum">每日份数</nz-form-label>
-						<nz-form-control nzHasFeedback nzErrorTip="请输入每日份数">
-							<nz-input-number formControlName="goodsNum" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
-							</nz-input-number>
-						</nz-form-control>
+					<nz-form-item nz-row [nzFlex]="true" *ngIf="true">
+						<div nz-col nzSpan="12">
+							<nz-form-label nzRequired nzFor="goodsNum">每日份数</nz-form-label>
+							<nz-form-control nzHasFeedback nzErrorTip="请输入每日份数">
+								<nz-input-number formControlName="goodsNum" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
+								</nz-input-number>
+							</nz-form-control>
+						</div>
+
+						<div nz-col nzSpan="12" *ngIf="true">
+							<nz-form-label nzFor="goodsTotal">总库存</nz-form-label>
+							<nz-form-control nzHasFeedback nzErrorTip="请输入总库存">
+								<nz-input-number formControlName="goodsTotal" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
+								</nz-input-number>
+							</nz-form-control>
+						</div>
 					</nz-form-item>
 
-					<nz-form-item>
-						<nz-form-label nzRequired nzFor="goodsNum">总库存</nz-form-label>
-						<nz-form-control nzHasFeedback nzErrorTip="请输入总库存">
-							<nz-input-number formControlName="goodsNum" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
-							</nz-input-number>
-						</nz-form-control>
-					</nz-form-item>
-
-					<nz-form-item>
-						<nz-form-control [nzSpan]="14" [nzOffset]="3">
-							<button nz-button nzType="default" (click)="cancel($event)">取消</button>
+					<nz-form-item class="form-footer">
+						<nz-form-control>
+							<button nz-button nzType="default" (click)="prizeCancel($event)">取消</button>
 							<button nz-button nzType="primary" style="margin-left: 20px;">保存</button>
 						</nz-form-control>
 					</nz-form-item>
@@ -324,16 +335,17 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngFor="let data of lists">
+							<tr *ngFor="let data of lists; let i=index">
 								<td>{{data.goods}}</td>
 								<td><img [src]="data.goodsImg" alt class="table-img" /></td>
-								<td>{{data.goodsType}}</td>
+								<td>{{goodsTypeData[data.goodsType]}}</td>
 								<td>{{data.goodsName}}</td>
-								<td>{{data.goodsPrizeRate}}</td>
-								<td>{{data.goodsNum}}</td>
-								<td>{{data.goodsTotal}}</td>
+								<td>{{ data.goodsType !== '3' ? data.goodsPrizeRate : '糖果不设置' }}</td>
+								<td>{{ data.goodsType !== '3' ? data.goodsNum : '糖果不设置' }}</td>
+								<td>{{ data.goodsType !== '3' ? data.goodsTotal : '糖果不设置' }}</td>
 								<td class="operation">
-									<button nz-button [ngClass]="{'text-success': false}">设置</button>
+									<button nz-button [ngClass]="{'text-success': false}"
+										(click)="settingPrize($event, i, data.id)">设置</button>
 								</td>
 							</tr>
 						</tbody>
@@ -371,8 +383,8 @@
 				</div>
 			</nz-form-item>
 
-			<nz-form-item>
-				<nz-form-control [nzSpan]="14" [nzOffset]="3">
+			<nz-form-item class="form-footer">
+				<nz-form-control>
 					<button nz-button nzType="default" (click)="cancel($event)">取消</button>
 					<button nz-button nzType="primary" style="margin-left: 20px;">保存</button>
 				</nz-form-control>

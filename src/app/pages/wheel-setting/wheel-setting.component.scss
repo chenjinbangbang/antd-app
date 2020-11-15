@@ -102,6 +102,11 @@
           }
         }
       }
+
+      .form-footer {
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 }
@@ -142,6 +147,11 @@
       .form-item-note {
         // margin-top: 10px;
         color: #666;
+      }
+
+      .form-footer {
+        display: flex;
+        justify-content: center;
       }
     }
   }
