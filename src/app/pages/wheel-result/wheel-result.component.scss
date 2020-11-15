@@ -1,0 +1,47 @@
+.wheel-result {
+  .search {
+    margin-top: 20px;
+
+    .ant-form {
+      .ant-select {
+        width: 150px;
+      }
+    }
+  }
+
+  .table {
+    .table-top {
+      button {
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+.prize-img{
+	// .prize-title{
+	// 	font-size: 18px;
+	// 	margin-top: 10px;
+	// 	text-align: center;
+	// }
+	.prize-note {
+		// margin: 20px 0;
+	}
+	.prize-img-list{
+		display: flex;
+		flex-wrap: wrap;
+		margin: 20px 0;
+		img{
+			width: 47%;
+			margin: 0 10px 10px 0;
+			// &:nth-child(2n) {
+			// 	margin-left: 4%;
+			// }
+		}
+	}
+	.prize-footer{
+		display: flex;
+		justify-content: center;
+		button{}
+	}
+}

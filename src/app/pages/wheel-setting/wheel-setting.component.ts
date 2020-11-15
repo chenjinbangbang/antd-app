@@ -93,7 +93,7 @@ export class WheelSettingComponent implements OnInit {
 
   // 表单数据
   form = this.fb.group({
-    id: ['', [Validators.required], [this.idAsyncValidator]],
+    rotaryTableId: ['', [Validators.required], [this.idAsyncValidator]],
     name: ['', [Validators.required, Validators.maxLength(10)]],
     describe: ['', [Validators.required, Validators.maxLength(200)]],
     startDate: [null, [Validators.required]],
@@ -122,14 +122,15 @@ export class WheelSettingComponent implements OnInit {
   get citys() {
     return this.form.get('citys') as FormArray;
   }
-  fileList = []
-  previewImage: string = '' // 预览的图片
-  previewVisible: boolean = false // 预览的图片弹框
-  originForm: string = '' // 表单字符串，用于判断表单是否修改过
+  isEdit: boolean = false; // 是否是编辑活动页面
+  fileList = [];
+  previewImage: string = ''; // 预览的图片
+  previewVisible: boolean = false; // 预览的图片弹框
+  originForm: string = ''; // 表单字符串，用于判断表单是否修改过
 
   // 中奖概率校验
   prizeRateValidator(control: FormControl): ValidationErrors | null {
-    console.log(control);
+    // console.log(control);
     let val = control.value;
 
     if (val) {
@@ -139,7 +140,7 @@ export class WheelSettingComponent implements OnInit {
       }
 
       let arr = val.split(';');
-      console.log(arr);
+      // console.log(arr);
       for (let i in arr) {
         if (!arr[i]) {
           return { inputError: true };
@@ -196,130 +197,18 @@ export class WheelSettingComponent implements OnInit {
 
   // 表格数据
   lists: any[] = [
-    {
-      id: 'MW0001',
-      goods: '商品1',
-      goodsImg: 'assets/1.png',
-      goodsType: '1',
-      goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: "100;200",
-      goodsNum: 50,
-      goodsTotal: 5000
-    },
-    {
-      id: 'MW0002',
-      goods: '商品2',
-      goodsImg: 'assets/2.png',
-      goodsType: '2',
-      goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: "200",
-      goodsNum: 20,
-      goodsTotal: 1000
-    },
-    {
-      id: 'MW0003',
-      goods: '商品3',
-      goodsImg: 'assets/2.png',
-      goodsType: '3',
-      goodsName: '网红笔记本',
-      goodsPrizeRate: "10;400",
-      goodsNum: '糖果不设置',
-      goodsTotal: '糖果不设置',
-    },
-    {
-      id: 'MW0004',
-      goods: '商品4',
-      goodsImg: 'assets/1.png',
-      goodsType: '1',
-      goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: "10;100",
-      goodsNum: 50,
-      goodsTotal: 5000
-    },
-    {
-      id: 'MW0005',
-      goods: '商品5',
-      goodsImg: 'assets/2.png',
-      goodsType: '2',
-      goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: "10;400;90",
-      goodsNum: 20,
-      goodsTotal: 1000
-    },
-    {
-      id: 'MW0006',
-      goods: '商品6',
-      goodsImg: 'assets/2.png',
-      goodsType: '3',
-      goodsName: '网红笔记本',
-      goodsPrizeRate: "10;410;90",
-      goodsNum: '糖果不设置',
-      goodsTotal: '糖果不设置',
-    },
-    {
-      id: 'MW0007',
-      goods: '商品7',
-      goodsImg: 'assets/1.png',
-      goodsType: '1',
-      goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: "400;90",
-      goodsNum: 50,
-      goodsTotal: 5000
-    },
-    {
-      id: 'MW0008',
-      goods: '商品8',
-      goodsImg: 'assets/2.png',
-      goodsType: '2',
-      goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: "10;400;910",
-      goodsNum: 20,
-      goodsTotal: 1000
-    },
-    {
-      id: 'MW0009',
-      goods: '商品9',
-      goodsImg: 'assets/2.png',
-      goodsType: '3',
-      goodsName: '网红笔记本',
-      goodsPrizeRate: "10;400;10",
-      goodsNum: '糖果不设置',
-      goodsTotal: '糖果不设置',
-    },
-    {
-      id: 'MW00010',
-      goods: '商品10',
-      goodsImg: 'assets/1.png',
-      goodsType: '1',
-      goodsName: 'xxxx品牌笔记本',
-      goodsPrizeRate: "10;400;90;110",
-      goodsNum: 50,
-      goodsTotal: 5000
-    },
-    {
-      id: 'MW00011',
-      goods: '商品11',
-      goodsImg: 'assets/2.png',
-      goodsType: '2',
-      goodsName: 'xxxx品牌雨伞',
-      goodsPrizeRate: "10;400;190",
-      goodsNum: 20,
-      goodsTotal: 1000
-    },
-    {
-      id: 'MW00012',
-      goods: '商品12',
-      goodsImg: 'assets/2.png',
-      goodsType: '3',
-      goodsName: '网红笔记本',
-      goodsPrizeRate: "10;200;90",
-      goodsNum: '糖果不设置',
-      goodsTotal: '糖果不设置',
-    },
+    // {
+    //   id: 'MW0001',
+    //   goods: '商品1',
+    //   goodsImg: 'assets/1.png',
+    //   goodsType: '1',
+    //   goodsName: 'xxxx品牌笔记本',
+    //   goodsPrizeRate: "100;200",
+    //   goodsNum: 50,
+    //   goodsTotal: 5000
+    // }
   ];
 
-
-  search: string = ""; // 搜索关键词
   pageIndex: number = 1; // 当前页码
   loading: boolean = false; // 加载中
   activityId: string = ""; // 当前选中的活动
@@ -358,16 +247,23 @@ export class WheelSettingComponent implements OnInit {
     // let id: Observable<string> = this.route.params.pipe(map(p => p.id));
     // console.log(id)
 
-    // this.route.params.subscribe(data => {
-    //   console.log(data)
-    // })
+    this.route.params.subscribe(data => {
+      console.log(data);
+      // 若路由存在rotaryTableId，则是编辑活动页面，否则是添加活动
+      if(data.rotaryTableId) {
+        this.form.patchValue({
+          rotaryTableId: data.rotaryTableId,
+          isEdit: true
+        })
+      }
+    })
 
     this.originForm = JSON.stringify(this.form.value);
   }
 
   // 抽奖费用的逻辑函数
   costChange(val, key) {
-    console.log(val, key);
+    // console.log(val, key);
     if (!val) {
       this.form.patchValue({
         [key]: ''
@@ -382,15 +278,15 @@ export class WheelSettingComponent implements OnInit {
 
   // 删除城市
   deleteCity(index) {
-    console.log(index)
+    // console.log(index)
     this.citys.removeAt(index)
   }
 
   // 预览图片
   handlePreview(file: UploadFile) {
-    console.log(file);
+    // console.log(file);
     this.previewImage = file.url || file.thumbUrl;
-    console.log(this.fileList);
+    // console.log(this.fileList);
     this.previewVisible = true;
   }
 
@@ -412,7 +308,7 @@ export class WheelSettingComponent implements OnInit {
 
     let form = { ...this.form.value, startDate, endDate, startTime, endTime }
 
-    console.log(form);
+    // console.log(form);
 
     this.message.success('保存成功');
   }
@@ -422,7 +318,7 @@ export class WheelSettingComponent implements OnInit {
   // 点击设置奖品
   settingPrize(e: MouseEvent, i, id) {
     e.preventDefault();
-    console.log('选中的奖品', id);
+    // console.log('选中的奖品', id);
     this.prizeId = id;
     this.isVisible = true;
 
@@ -431,9 +327,7 @@ export class WheelSettingComponent implements OnInit {
 
   // 取消奖品设置表单
   prizeCancel(e: MouseEvent) {
-    console.log(e);
-    // e.preventDefault();
-    console.log('取消')
+    e.preventDefault();
     // this.prizeForm.reset();
     console.log(this.prizeForm.controls);
 

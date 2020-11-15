@@ -1,3 +1,147 @@
 <div class="wheel-result">
 
+	<nz-modal [nzVisible]="previewVisible" [nzTitle]="selectRotary.name" [nzContent]="modalContent" [nzFooter]="null"
+		(nzOnCancel)="previewVisible = false" [nzWidth]="600">
+		<ng-template #modalContent>
+			<div class="prize-img">
+				<!-- <div class="prize-title">奖品名称</div> -->
+				<div class="prize-note">{{selectRotary.description}}</div>
+				<div class="prize-img-list">
+					<img *ngFor="let item of selectRotary.entityImageUrls" [src]="item" alt />
+				</div>
+				<div class="prize-footer">
+					<button nz-button (click)="previewVisible = false">关闭</button>
+				</div>
+			</div>
+		</ng-template>
+	</nz-modal>
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>营销活动</nz-breadcrumb-item>
+    <nz-breadcrumb-item>大转盘</nz-breadcrumb-item>
+    <nz-breadcrumb-item>活动结果</nz-breadcrumb-item>
+	</nz-breadcrumb>
+	
+	<div class="search">
+
+		<form nz-form nzLayout="inline" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+			<nz-form-item>
+				<nz-form-label>活动Id</nz-form-label>
+				<nz-form-control>
+					<input nz-input formControlName="rotaryTableId" id="rotaryTableId" placeholder="" />
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-label>开奖时间</nz-form-label>
+				
+				<nz-form-control>
+					<nz-range-picker formControlName="date" [nzShowTime]="true"></nz-range-picker>
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-label>奖品类型</nz-form-label>
+				<nz-form-control>
+					<nz-select formControlName="type">
+						<nz-option *ngFor="let item of goodsTypeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+						</nz-option>
+					</nz-select>
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-label>地址</nz-form-label>
+				<nz-form-control>
+					<nz-select formControlName="addressStatus">
+						<nz-option *ngFor="let item of addressList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+						</nz-option>
+					</nz-select>
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-label>用户账号</nz-form-label>
+				<nz-form-control>
+					<input nz-input formControlName="username" placeholder="请输入用户账号" />
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-label>奖品</nz-form-label>
+				<nz-form-control>
+					<input nz-input formControlName="name" placeholder="请输入奖品" />
+				</nz-form-control>
+			</nz-form-item>
+		
+			<nz-form-item>
+				<nz-form-label>联系电话</nz-form-label>
+				<nz-form-control>
+					<input nz-input formControlName="phone" placeholder="请输入联系电话" />
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-label>收货城市</nz-form-label>
+				<nz-form-control>
+					<input nz-input formControlName="cityName" placeholder="请输入收货城市" />
+				</nz-form-control>
+			</nz-form-item>
+
+			<nz-form-item>
+				<nz-form-label>收货城区</nz-form-label>
+				<nz-form-control>
+					<input nz-input formControlName="provinceName" placeholder="请输入收货城区" />
+				</nz-form-control>
+			</nz-form-item>
+			
+			<nz-form-item>
+				<nz-form-control>
+					<button nz-button nzType="primary">搜索</button>
+				</nz-form-control>
+			</nz-form-item>
+		</form>
+	</div>
+	
+	<div class="table">
+		<div class="table-top">
+			<button nz-button nzType="primary" (click)="exportFn()">导出</button>
+		</div>
+		<nz-table [nzData]="lists" [nzPageIndex]="pageIndex" nzPageSize="10" [nzTotal]="total" [nzLoading]="loading"
+			[nzShowQuickJumper]="true" (nzPageIndexChange)="changePage($event)">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>用户账号</th>
+					<th>中奖时间</th>
+					<th>奖品类型</th>
+					<th>奖品图片</th>
+					<th>奖品名称</th>
+					<th>金额</th>
+					<th>收件人</th>
+					<th>联系电话</th>
+					<th>收货城市</th>
+					<th>收货地区</th>
+					<th>具体收货地址</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let data of lists; let i=index">
+					<td>{{data.rotaryTableId}}</td>
+					<td>{{data.username}}</td>
+					<td>{{data.createdTime}}</td>
+					<td>{{goodsTypeData[data.type]}}</td>
+					<td><img [src]="data.imageUrl" alt class="table-img" (click)="watchInfo(i, data.rotaryTableId)"/></td>
+					<td>{{data.name}}</td>
+					<td>{{data.lotteryNumber}}</td>
+					<td>{{data.recipients}}</td>
+					<td>{{data.phone}}</td>
+					<td>{{data.cityName}}</td>
+					<td>{{data.provinceName}}</td>
+					<td>{{data.address}}</td>
+				</tr>
+			</tbody>
+		</nz-table>
+	</div>
+
 </div>

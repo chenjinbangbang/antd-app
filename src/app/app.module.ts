@@ -22,6 +22,7 @@ import { StepComponent } from './components/step/step.component';
 import { WheelComponent } from './pages/wheel/wheel.component';
 import { WheelResultComponent } from './pages/wheel-result/wheel-result.component';
 import { WheelSettingComponent } from './pages/wheel-setting/wheel-setting.component';
+import { ActivityComponent } from './pages/activity/activity.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { WheelSettingComponent } from './pages/wheel-setting/wheel-setting.compo
     WheelComponent,
     WheelResultComponent,
     WheelSettingComponent,
-    StepComponent
+    StepComponent,
+    ActivityComponent
   ],
   imports: [
     BrowserModule,
