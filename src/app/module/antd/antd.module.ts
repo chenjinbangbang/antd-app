@@ -3,10 +3,21 @@ import { CommonModule } from '@angular/common';
 
 import {
   NzButtonModule,
+  NzGridModule,
+  NzIconModule,
   NzInputModule,
+  NzCheckboxModule,
+  NzSelectModule,
+  NzInputNumberModule,
+  NzUploadModule,
   NzMenuModule,
   NzBreadCrumbModule,
-  NzTableModule
+  NzTableModule,
+  NzModalModule,
+  NzMessageModule,
+  NzFormModule,
+  NzDatePickerModule,
+  NzTimePickerModule
 } from 'ng-zorro-antd';
 
 @NgModule({
@@ -16,10 +27,21 @@ import {
   ],
   exports: [
     NzButtonModule,
+    NzGridModule,
+    NzIconModule,
     NzInputModule,
+    NzCheckboxModule,
+    NzSelectModule,
+    NzInputNumberModule,
+    NzUploadModule,
     NzMenuModule,
     NzBreadCrumbModule,
-    NzTableModule
+    NzTableModule,
+    NzModalModule,
+    NzMessageModule,
+    NzFormModule,
+    NzDatePickerModule,
+    NzTimePickerModule
   ]
 })
 export class AntdModule { }

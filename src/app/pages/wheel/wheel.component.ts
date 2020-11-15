@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NzModalService, NzMessageService } from 'ng-zorro-antd';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-wheel',
@@ -8,7 +10,17 @@ import { Component, OnInit } from '@angular/core';
 export class WheelComponent implements OnInit {
   search: string = ""; // 搜索关键词
   pageIndex: number = 1; // 当前页码
-  loading: boolean = true; // 加载中
+  loading: boolean = false; // 加载中
+  activityId: string = ""; // 当前选中的活动
+  operationType: number = 1; // 操作类型，1：开启，2：停用，3：删除，4：已关联内容，无法删除
+  operationTypeText: object = {
+    1: "开启",
+    2: "停用",
+    3: "删除"
+  }
+
+  isVisible: boolean = false; // 模态框
+  modalContent: string = ""; // 模态框标题
 
   // 表格数据
   lists: any[] = [
@@ -98,17 +110,97 @@ export class WheelComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(
+    private modal: NzModalService,
+    private message: NzMessageService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    setTimeout(() => { 
+    setTimeout(() => {
       this.loading = false;
     }, 1000)
+
+    // this.modal.create({
+    //   nzIconType: "exclamation-circle",
+    //   nzTitle: "删除",
+    //   nzContent: `<div>是否删除吗？</div>`,
+    //   nzOkText: null,
+    //   nzCancelText: null
+    // })
+  }
+
+  // 改变页
+  changePage(page: number) {
+    console.log("当前页", page);
+    this.pageIndex = page;
   }
 
   // 搜索活动
-  searchFn() { 
+  searchFn() {
     console.log(this.search);
+  }
+
+  // 添加活动
+  createFn() {
+    this.router.navigate(["/wheel-setting", { id: '123' }])
+  }
+
+  // 开启活动
+  startFn(id) {
+    console.log('开启活动', id);
+
+    this.activityId = id;
+    this.operationType = 1;
+    this.modalContent = "确定开启吗？";
+    this.isVisible = true;
+  }
+
+  // 停止活动
+  stopFn(id) {
+    console.log('停止活动', id);
+
+    this.activityId = id;
+    this.operationType = 2;
+    this.modalContent = "确定停用吗？";
+    this.isVisible = true;
+  }
+
+  // 编辑活动
+  editFn(id) {
+    console.log('编辑活动', id);
+  }
+
+  // 抽奖结果
+  resultFn(id) {
+    console.log('抽奖结果', id);
+  }
+
+  // 删除活动
+  deleteFn(id) {
+    console.log('删除活动', id);
+
+    this.activityId = id;
+    this.operationType = 3;
+    this.modalContent = "确定删除吗？";
+    this.isVisible = true;
+
+    if (true) {
+      this.operationType = 4;
+      this.modalContent = "已关联内容，无法删除";
+    }
+  }
+
+  // 点击确定
+  submit() {
+    this.isVisible = false;
+
+    if (this.operationType === 4) {
+      return;
+    }
+
+    this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
+    // console.log(`${this.operationTypeText[this.operationType]}成功！`);
   }
 
 }

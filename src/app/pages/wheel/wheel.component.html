@@ -1,4 +1,19 @@
 <div class="wheel">
+
+	<nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="300" [nzClosable]="false"
+		(nzOnCancel)="isVisible = false">
+		<div class="wheel-modal">
+			<div class="modal-content">
+				<i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
+				<span>{{modalContent}}</span>
+			</div>
+			<div class="modal-footer">
+				<button nz-button nzType="default" (click)="isVisible = false" *ngIf="operationType !== 4">取消</button>
+				<button nz-button nzType="primary" (click)="submit()">确定</button>
+			</div>
+		</div>
+	</nz-modal>
+
 	<nz-breadcrumb>
 		<nz-breadcrumb-item>营销活动</nz-breadcrumb-item>
 		<nz-breadcrumb-item>大转盘</nz-breadcrumb-item>
@@ -13,7 +28,12 @@
 	</div>
 
 	<div class="table">
-		<nz-table #basicTable [nzData]="lists" [nzPageIndex]="pageIndex" nzPageSize="10" [nzLoading]="loading">
+		<div class="table-top">
+			<span>合计：20</span>
+			<button nz-button nzType="primary" (click)="createFn()">添加</button>
+		</div>
+		<nz-table #basicTable [nzData]="lists" [nzPageIndex]="pageIndex" nzPageSize="10" [nzLoading]="loading"
+			[nzShowQuickJumper]="true" [nzShowSizeChanger]="true" (nzPageIndexChange)="changePage($event)">
 			<thead>
 				<tr>
 					<th nzWidth="100px">活动ID</th>
@@ -21,7 +41,7 @@
 					<th>活动时间</th>
 					<th>预热时间</th>
 					<th nzWidth="80px">状态</th>
-					<th nzWidth="360px">操作</th>
+					<th nzWidth="340px">操作</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -32,14 +52,15 @@
 					<td>{{data.activityTimeHot}}</td>
 					<td>{{data.status}}</td>
 					<td class="operation">
-						<button nz-button>停止</button>
-						<button nz-button nzType="primary">编辑</button>
-						<button nz-button class="btn-success">抽奖结果</button>
-						<button nz-button nzType="danger">删除</button>
+						<button nz-button nzType="danger" (click)="startFn(data.id)">开启</button>
+						<button nz-button nzType="primary" (click)="stopFn(data.id)">停止</button>
+						<button nz-button nzType="primary" (click)="editFn(data.id)">编辑</button>
+						<button nz-button class="btn-success" (click)="resultFn(data.id)">抽奖结果</button>
+						<button nz-button nzType="danger" (click)="deleteFn(data.id)">删除</button>
 					</td>
 				</tr>
 			</tbody>
 		</nz-table>
 	</div>
-	
+
 </div>

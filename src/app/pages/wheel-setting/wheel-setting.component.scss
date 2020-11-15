@@ -1,0 +1,148 @@
+.wheel-setting {
+  .form {
+    margin-top: 20px;
+    padding-right: 20px;
+
+    .ant-form {
+      .ant-form-item-control-wrapper {
+        position: relative;
+      }
+
+      .text-length {
+        text-align: right;
+      }
+
+      .form-checkbox {
+        display: flex;
+        align-items: center;
+        label {
+        }
+        .form-checkbox-right {
+          margin-left: 20px;
+          .ant-input-number {
+            width: 100px;
+          }
+          span {
+            &.span-left {
+              margin-right: 10px;
+            }
+            &.span-right {
+              margin-left: 10px;
+            }
+          }
+        }
+      }
+
+      .form-city {
+        .city-top {
+          margin-top: 10px;
+          span {
+            &:nth-child(1) {
+            }
+            &:nth-child(2) {
+              margin-left: 10px;
+              color: #09f;
+              cursor: pointer;
+            }
+          }
+        }
+        .city-list {
+          margin-top: 14px;
+          display: flex;
+          flex-wrap: wrap;
+          li {
+            padding: 4px 12px;
+            border: 1px dashed #999;
+            border-radius: 4px;
+            margin: 0 10px 5px 0;
+            &:hover {
+              border: 1px dashed #1890ff;
+            }
+            span {
+            }
+            i {
+              cursor: pointer;
+              margin-left: 5px;
+            }
+          }
+        }
+      }
+
+      .table {
+        .table-img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+        .operation {
+          .btn-success {
+            background-color: #59b53b;
+            color: #fff;
+          }
+          .text-success {
+            color: #59b53b;
+          }
+
+          button {
+            margin: 2px 5px;
+          }
+        }
+      }
+
+      .form-item-note {
+        margin-top: 10px;
+        color: #666;
+      }
+
+      .form-upload {
+        .ant-upload-picture-card-wrapper {
+          .upload-icon {
+            font-size: 32px;
+            color: #999;
+          }
+        }
+      }
+    }
+  }
+}
+
+.wheel-modal {
+  .wheel-title {
+    text-align: center;
+    font-size: 20px;
+    // font-weight: bold;
+  }
+
+  .wheel-form {
+    margin-top: 20px;
+    .ant-form {
+      .ant-input-number {
+        width: 200px;
+      }
+
+      .goods-img {
+        position: absolute;
+        top: 80px;
+        right: 80px;
+      }
+
+      .form-upload {
+        .ant-upload-picture-card-wrapper {
+          .upload-icon {
+            font-size: 32px;
+            color: #999;
+          }
+        }
+      }
+
+      .text-length {
+        text-align: right;
+      }
+
+      .form-item-note {
+        // margin-top: 10px;
+        color: #666;
+      }
+    }
+  }
+}
