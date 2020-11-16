@@ -10,23 +10,15 @@
   <nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="1000" [nzClosable]="false"
     (nzOnCancel)="isVisible = false">
     <div class="wheel-modal">
-      <!-- <div class="modal-content">
-				<i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
-				<span>{{modalContent}}</span>
-			</div>
-			<div class="modal-footer">
-				<button nz-button nzType="default" (click)="isVisible = false" *ngIf="operationType !== 4">取消</button>
-				<button nz-button nzType="primary" (click)="submit()">保存</button>
-			</div> -->
 
       <div class="wheel-title">奖品设置</div>
 
       <div class="wheel-form">
         <form nz-form nzLayout="vertical" [formGroup]="prizeForm" (ngSubmit)="submitPrizeForm()">
           <nz-form-item>
-            <nz-form-label nzRequired nzFor="goodsType">奖品类型</nz-form-label>
+            <nz-form-label nzRequired nzFor="type">奖品类型</nz-form-label>
             <nz-form-control [nzSpan]="8" nzHasFeedback nzErrorTip="请输入奖品类型">
-              <nz-select formControlName="goodsType" nzPlaceHolder="请输入奖品类型" id="goodsType">
+              <nz-select formControlName="type" nzPlaceHolder="请输入奖品类型" id="type">
                 <nz-option *ngFor="let item of goodsTypeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
                 </nz-option>
               </nz-select>
@@ -35,13 +27,13 @@
 
           <nz-form-item nz-row [nzFlex]="true">
             <div nz-col nzSpan="8">
-              <nz-form-label nzRequired nzFor="goodsName">奖品名称</nz-form-label>
+              <nz-form-label nzRequired nzFor="name">奖品名称</nz-form-label>
               <nz-form-control nzHasFeedback nzErrorTip="请输入奖品名称">
-                <input nz-input formControlName="goodsName" id="goodsName" maxlength="30" placeholder="输入奖品名称" />
+                <input nz-input formControlName="name" id="name" maxlength="30" placeholder="输入奖品名称" />
               </nz-form-control>
             </div>
 
-            <div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.goodsType === '1'">
+            <div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.type === 'CASH'">
               <nz-form-label nzRequired nzFor="goodsCandyNum">金额</nz-form-label>
               <nz-form-control nzHasFeedback nzErrorTip="请输入金额">
                 <nz-input-number formControlName="goodsCandyNum" [nzMin]="1" [nzMax]="99999" [nzStep]="1">
@@ -49,7 +41,7 @@
               </nz-form-control>
             </div>
 
-            <div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.goodsType === '3'">
+            <div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.type === 'CANDY'">
               <nz-form-label nzRequired nzFor="goodsCost">糖果数量</nz-form-label>
               <nz-form-control nzHasFeedback nzErrorTip="请输入金额">
                 <nz-input-number formControlName="goodsCost" [nzMin]="1" [nzMax]="9999" [nzStep]="1">
@@ -73,7 +65,7 @@
             <div class="form-upload">
               <nz-upload nzAction="https://jsonplaceholder.typicode.com/posts/" nzListType="picture-card" [nzLimit]="1"
                 [nzSize]="1024" nzFileType="image/jpeg,image/png" [(nzFileList)]="fileList"
-                [nzShowButton]="fileList.length < 1" nzName="goodsImg"
+                [nzShowButton]="fileList.length < 1" nzName="imageUrl"
                 [nzShowUploadList]="{ showPreviewIcon: true, showRemoveIcon: true, hidePreviewIconInNonImage: true }"
                 [nzPreview]="handlePreview">
                 <i nz-icon nzType="plus" class="upload-icon"></i>
@@ -100,12 +92,12 @@
 
           <nz-form-item *ngIf="true">
             <div style="display: flex;">
-              <nz-form-label nzRequired nzFor="goodsPrizeRate">中奖概率</nz-form-label>
+              <nz-form-label nzRequired nzFor="winnerNumbers">中奖概率</nz-form-label>
               <div class="form-item-note">（请填写第几位抽奖人获奖，多个数据用半角;隔开）</div>
             </div>
 
             <nz-form-control nzHasFeedback [nzErrorTip]="goodsPrizeRateTip">
-              <textarea nz-input formControlName="goodsPrizeRate" id="goodsPrizeRate" maxlength="500"
+              <textarea nz-input formControlName="winnerNumbers" id="winnerNumbers" maxlength="500"
                 placeholder="请输入中奖概率" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
               <ng-template #goodsPrizeRateTip let-control>
                 <ng-container *ngIf="control.hasError('required');">请输入中奖概率</ng-container>
@@ -115,22 +107,22 @@
                 <ng-container *ngIf="control.hasError('repeatError')">抽奖概率不允许重复</ng-container>
               </ng-template>
             </nz-form-control>
-            <div class="text-length">{{prizeForm.value.goodsPrizeRate.length}}/500</div>
+            <div class="text-length">{{prizeForm.value.winnerNumbers.length}}/500</div>
           </nz-form-item>
 
           <nz-form-item nz-row [nzFlex]="true" *ngIf="true">
             <div nz-col nzSpan="12">
-              <nz-form-label nzRequired nzFor="goodsNum">每日份数</nz-form-label>
+              <nz-form-label nzRequired nzFor="everydayQuantity">每日份数</nz-form-label>
               <nz-form-control nzHasFeedback nzErrorTip="请输入每日份数">
-                <nz-input-number formControlName="goodsNum" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
+                <nz-input-number formControlName="everydayQuantity" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
                 </nz-input-number>
               </nz-form-control>
             </div>
 
             <div nz-col nzSpan="12" *ngIf="true">
-              <nz-form-label nzFor="goodsTotal">总库存</nz-form-label>
+              <nz-form-label nzFor="allQuantity">总库存</nz-form-label>
               <nz-form-control nzHasFeedback nzErrorTip="请输入总库存">
-                <nz-input-number formControlName="goodsTotal" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
+                <nz-input-number formControlName="allQuantity" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
                 </nz-input-number>
               </nz-form-control>
             </div>
@@ -158,7 +150,7 @@
       <nz-form-item>
         <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="rotaryTableId">活动Id</nz-form-label>
         <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback nzValidatingTip="获取活动Id中..." [nzErrorTip]="idTip">
-          <input nz-input formControlName="rotaryTableId" id="rotaryTableId" placeholder="请输入活动Id" [disabled]="true" />
+          <input nz-input formControlName="rotaryTableId" id="rotaryTableId" placeholder="请输入活动Id" [disabled]="false" />
           <ng-template #idTip let-control>
             <ng-container *ngIf="control.hasError('required')">请输入活动Id</ng-container>
             <ng-container *ngIf="control.hasError('duplicated')">此Id已存在</ng-container>
@@ -167,19 +159,19 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="name">活动标题</nz-form-label>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="title">活动标题</nz-form-label>
         <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback nzErrorTip="请输入活动标题">
-          <input nz-input formControlName="name" id="name" maxlength="10" placeholder="输入活动标题，会显示在大转盘上" />
+          <input nz-input formControlName="title" id="title" maxlength="10" placeholder="输入活动标题，会显示在大转盘上" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="describe">活动描述</nz-form-label>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="description">活动描述</nz-form-label>
         <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback nzErrorTip="请输入活动描述">
-          <textarea nz-input formControlName="describe" id="describe" maxlength="200" placeholder="请输入活动描述，会显示在大转盘上"
+          <textarea nz-input formControlName="description" id="description" maxlength="200" placeholder="请输入活动描述，会显示在大转盘上"
             [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
         </nz-form-control>
-        <div class="text-length">{{form.value.describe.length}}/200</div>
+        <div class="text-length">{{form.value.description.length}}/200</div>
       </nz-form-item>
 
       <nz-form-item [nzFlex]="true">
@@ -206,7 +198,7 @@
         </nz-form-control>
       </nz-form-item>
 
-      <nz-form-item [nzFlex]="true">
+      <!-- <nz-form-item [nzFlex]="true">
         <nz-form-label [nzSm]="3" nzRequired>活动预热</nz-form-label>
 
         <nz-form-label [nzSm]="2">开始日期</nz-form-label>
@@ -218,7 +210,7 @@
         <nz-form-control [nzSm]="8" nzHasFeedback nzErrorTip="请选择结束日期">
           <nz-date-picker formControlName="hotEndTime" [nzShowTime]="true"></nz-date-picker>
         </nz-form-control>
-      </nz-form-item>
+      </nz-form-item> -->
 
       <nz-form-item [nzFlex]="true">
         <nz-form-label [nzSm]="3" nzRequired>抽奖费用</nz-form-label>
@@ -226,11 +218,11 @@
         <div nzSm="21">
           <nz-form-control>
             <div class="form-checkbox">
-              <label nz-checkbox formControlName="isCost1"
-                (ngModelChange)="costChange($event, 'cost1')">活动期间每账号每日可免费抽奖</label>
+              <label nz-checkbox formControlName="everydayFree"
+                (ngModelChange)="costChange($event, 'everydayFreeCount')">活动期间每账号每日可免费抽奖</label>
               <div class="form-checkbox-right">
-                <nz-input-number formControlName="cost1" [nzMin]="0" [nzMax]="9999" [nzStep]="1"
-                  [nzDisabled]="!form.value.isCost1">
+                <nz-input-number formControlName="everydayFreeCount" [nzMin]="0" [nzMax]="9999" [nzStep]="1"
+                  [nzDisabled]="!form.value.everydayFree">
                 </nz-input-number>
                 <span class="span-right">次</span>
               </div>
@@ -239,12 +231,12 @@
 
           <nz-form-control>
             <div class="form-checkbox">
-              <label nz-checkbox formControlName="isCost2"
-                (ngModelChange)="costChange($event, 'cost2')">充值送免费抽奖机会</label>
+              <label nz-checkbox formControlName="topUpPresented"
+                (ngModelChange)="costChange($event, 'topUpAmount')">充值送免费抽奖机会</label>
               <div class="form-checkbox-right">
                 <span class="span-left">1次性充值</span>
-                <nz-input-number formControlName="cost2" [nzMin]="1" [nzMax]="9999" [nzStep]="1"
-                  [nzDisabled]="!form.value.isCost2">
+                <nz-input-number formControlName="topUpAmount" [nzMin]="1" [nzMax]="9999" [nzStep]="1"
+                  [nzDisabled]="!form.value.topUpPresented">
                 </nz-input-number>
                 <span class="span-right">元以上可增加1次抽奖机会</span>
               </div>
@@ -253,11 +245,11 @@
 
           <nz-form-control>
             <div class="form-checkbox">
-              <label nz-checkbox formControlName="isCost3"
-                (ngModelChange)="costChange($event, 'cost3')">糖果换免费抽奖机会</label>
+              <label nz-checkbox formControlName="candyExchange"
+                (ngModelChange)="costChange($event, 'candyExchangeAmount')">糖果换免费抽奖机会</label>
               <div class="form-checkbox-right">
-                <nz-input-number formControlName="cost3" [nzMin]="1" [nzMax]="9999" [nzStep]="1"
-                  [nzDisabled]="!form.value.isCost3">
+                <nz-input-number formControlName="candyExchangeAmount" [nzMin]="1" [nzMax]="9999" [nzStep]="1"
+                  [nzDisabled]="!form.value.candyExchange">
                 </nz-input-number>
                 <span class="span-right">糖果可兑换1次抽奖机会</span>
               </div>
@@ -266,11 +258,11 @@
 
           <nz-form-control>
             <div class="form-checkbox">
-              <label nz-checkbox formControlName="isCost4" (ngModelChange)="costChange($event, 'cost4')">付费抽奖</label>
+              <label nz-checkbox formControlName="pay" (ngModelChange)="costChange($event, 'payAmount')">付费抽奖</label>
               <div class="form-checkbox-right">
                 <span class="span-left">支付</span>
-                <nz-input-number formControlName="cost4" [nzMin]="0.01" [nzMax]="9999.99" [nzStep]="0.01"
-                  [nzDisabled]="!form.value.isCost4">
+                <nz-input-number formControlName="payAmount" [nzMin]="0.01" [nzMax]="9999.99" [nzStep]="0.01"
+                  [nzDisabled]="!form.value.pay">
                 </nz-input-number>
                 <span class="span-right">元可增加1次抽奖机会</span>
               </div>
@@ -290,7 +282,7 @@
             </div>
             <ul class="city-list">
               <li *ngFor="let city of citys.controls; let i=index">
-                <span>{{city.value}}</span>
+                <span>{{city.value.cityName}}</span>
                 <i nz-icon nzType="close" nzTheme="outline" (click)="deleteCity(i)"></i>
               </li>
             </ul>
@@ -302,7 +294,7 @@
         <nz-form-label [nzSm]="3" nzRequired>中奖概率计数</nz-form-label>
 
         <nz-form-control [nzSm]="21">
-          <nz-input-number formControlName="prizeRate" [nzMin]="1" [nzMax]="9999999" [nzStep]="1" [nzDisabled]="false">
+          <nz-input-number formControlName="lotteryCycle" [nzMin]="1" [nzMax]="9999999" [nzStep]="1" [nzDisabled]="false">
           </nz-input-number>
           <span style="margin-left: 10px;">人循环</span>
         </nz-form-control>
@@ -319,8 +311,7 @@
 
       <nz-form-item>
         <div class="table">
-          <nz-table #basicTable [nzData]="lists" [nzPageIndex]="pageIndex" nzPageSize="10" [nzLoading]="loading"
-            [nzShowQuickJumper]="true" [nzShowSizeChanger]="true" (nzPageIndexChange)="changePage($event)">
+          <nz-table [nzData]="prizeInfos" [nzLoading]="loading" [nzShowPagination]="false">
             <thead>
               <tr>
                 <th nzWidth="80px">商品</th>
@@ -334,17 +325,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let data of lists; let i=index">
-                <td>{{data.goods}}</td>
-                <td><img [src]="data.goodsImg" alt class="table-img" /></td>
-                <td>{{goodsTypeData[data.goodsType]}}</td>
-                <td>{{data.goodsName}}</td>
-                <td>{{ data.goodsType !== '3' ? data.goodsPrizeRate : '糖果不设置' }}</td>
-                <td>{{ data.goodsType !== '3' ? data.goodsNum : '糖果不设置' }}</td>
-                <td>{{ data.goodsType !== '3' ? data.goodsTotal : '糖果不设置' }}</td>
+              <tr *ngFor="let item of prizeInfos; let i=index">
+                <td>{{item.id}}</td>
+                <td><img [src]="item.imageUrl" alt class="table-img" /></td>
+                <td>{{goodsTypeData[item.type]}}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.type !== 'CANDY' ? item.winnerNumbers : '糖果不设置' }}</td>
+                <td>{{ item.type !== 'CANDY' ? item.everydayQuantity : '糖果不设置' }}</td>
+                <td>{{ item.type !== 'CANDY' ? item.allQuantity : '糖果不设置' }}</td>
                 <td class="operation">
-                  <button nz-button [ngClass]="{'text-success': false}"
-                    (click)="settingPrize($event, i, data.id)">设置</button>
+                  <button nz-button [ngClass]="{'text-success': item.imageUrl || item.description}"
+                    (click)="settingPrize($event, i, item.id)">设置</button>
                 </td>
               </tr>
             </tbody>
@@ -353,30 +344,36 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="rule">背景模板底图</nz-form-label>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired>背景模板底图</nz-form-label>
         <div class="form-item-note">（限1M以内的JPG，PNG图片）</div>
 
         <div class="form-upload">
-          <nz-upload nzAction="https://jsonplaceholder.typicode.com/posts/" nzListType="picture-card" [nzLimit]="1"
+          <nz-upload nzListType="picture-card" [nzLimit]="1"
             [nzSize]="1024" nzFileType="image/jpeg,image/png" [(nzFileList)]="fileList"
-            [nzShowButton]="fileList.length < 1" nzName="file1"
+            [nzShowButton]="fileList.length < 1" nzName="file"
             [nzShowUploadList]="{ showPreviewIcon: true, showRemoveIcon: true, hidePreviewIconInNonImage: true }"
-            [nzPreview]="handlePreview">
+						[nzPreview]="handlePreview"
+						[nzCustomRequest]="uploadChange"
+						>
             <i nz-icon nzType="plus" class="upload-icon"></i>
-          </nz-upload>
+					</nz-upload>
+					
+					<input type="file" (change)="change($event)"  />
         </div>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="rule">转盘模板底图</nz-form-label>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired>转盘模板底图</nz-form-label>
         <div class="form-item-note">（限1M以内的JPG，PNG图片）</div>
 
         <div class="form-upload">
           <nz-upload nzAction="https://jsonplaceholder.typicode.com/posts/" nzListType="picture-card" [nzLimit]="1"
             [nzSize]="1024" nzFileType="image/jpeg,image/png" [(nzFileList)]="fileList"
-            [nzShowButton]="fileList.length < 1" nzName="file2"
+            [nzShowButton]="fileList.length < 1" nzName="file"
             [nzShowUploadList]="{ showPreviewIcon: true, showRemoveIcon: true, hidePreviewIconInNonImage: true }"
-            [nzPreview]="handlePreview">
+						[nzPreview]="handlePreview"
+						(nzChange)="uploadChange"
+						>
             <i nz-icon nzType="plus" class="upload-icon"></i>
           </nz-upload>
         </div>

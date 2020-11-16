@@ -45,6 +45,7 @@ li {
   color: #59b53b;
 }
 
+// 表格样式
 .table {
   margin-top: 20px;
   margin-right: 20px;
@@ -62,7 +63,6 @@ li {
 
 // 表格样式
 .ant-table {
-
   .ant-table-tbody>tr>td,
   .ant-table-thead>tr>th {
     text-align: center;
@@ -105,5 +105,41 @@ li {
         margin: 0 20px;
       }
     }
+  }
+}
+
+// 表单输入
+.ant-form {
+  .ant-input-number {
+    width: 200px;
+  }
+
+  .goods-img {
+    position: absolute;
+    top: 80px;
+    right: 80px;
+  }
+
+  .form-upload {
+    .ant-upload-picture-card-wrapper {
+      .upload-icon {
+        font-size: 32px;
+        color: #999;
+      }
+    }
+  }
+
+  .text-length {
+    text-align: right;
+  }
+
+  .form-item-note {
+    // margin-top: 10px;
+    color: #666;
+  }
+
+  .form-footer {
+    display: flex;
+    justify-content: center;
   }
 }

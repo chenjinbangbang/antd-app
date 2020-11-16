@@ -44,7 +44,7 @@ export class WheelComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // 获取大转盘列表
+    // get the rotary table page（获取大转盘列表）
     this.getLists()
 
     // this.modal.create({
@@ -90,7 +90,7 @@ export class WheelComponent implements OnInit {
     // })
   }
 
-  // 获取大转盘列表
+  // get the rotary table page（获取大转盘列表）
   getLists() {
     this.loading = true;
     let params = {
@@ -100,7 +100,7 @@ export class WheelComponent implements OnInit {
 
     let url = '/api/setting/v1/rotary/table';
     this.configService.request(url, 'GET', params).subscribe((res: any) => {
-      console.log('获取大转盘列表', res);
+      console.log('get the rotary table page（获取大转盘列表）', res);
 
       this.lists = res.data;
       this.total = res.pagination.total_page;
@@ -113,7 +113,7 @@ export class WheelComponent implements OnInit {
     console.log("当前页", page);
     this.pageIndex = page;
 
-    // 获取大转盘列表
+    // get the rotary table page（获取大转盘列表）
     this.getLists()
   }
 
@@ -121,7 +121,7 @@ export class WheelComponent implements OnInit {
   searchFn() {
     // console.log(this.rotationTableId);
 
-    // 获取大转盘列表
+    // get the rotary table page（获取大转盘列表）
     this.getLists()
   }
 
@@ -180,17 +180,19 @@ export class WheelComponent implements OnInit {
   }
 
   // 模态框点击确定
-  submit() {
-    if (this.operationType === 4) {
+  confirmModal() {
+    if (this.operationType === 1 || this.operationType === 2) {
+      // 更改活动状态
+      this.alterStatus();
+    } else if (this.operationType === 3) {
+      // delete the rotary table（删除活动）
+      this.deleteRotary();
+    } else {
       this.isVisible = false;
-      return;
     }
-
-    // 更改活动状态
-    this.alterStatus();
   }
 
-  // 更改活动状态
+  // update the rotary table status info（更改活动状态）
   alterStatus() {
     let params = {
       rotaryTableId: this.rotaryTableId,
@@ -199,9 +201,23 @@ export class WheelComponent implements OnInit {
 
     let url = '/api/setting/v1/rotary/table/status';
     this.configService.request(url, 'PUT', params).subscribe((res: any) => {
-      console.log('获取大转盘列表', res);
+      console.log('update the rotary table status info（更改活动状态）', res);
 
-      // 获取大转盘列表
+      // get the rotary table page（获取大转盘列表）
+      this.getLists()
+
+      this.isVisible = false;
+      this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
+    })
+  }
+
+  // delete the rotary table（删除活动）
+  deleteRotary() {
+    let url = `/api/setting/v1/rotary/table/${this.rotaryTableId}`;
+    this.configService.request(url, 'DELETE').subscribe((res: any) => {
+      console.log('delete the rotary table（删除活动）', res);
+
+      // get the rotary table page（获取大转盘列表）
       this.getLists()
 
       this.isVisible = false;

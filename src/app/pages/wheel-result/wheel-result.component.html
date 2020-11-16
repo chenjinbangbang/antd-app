@@ -126,19 +126,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let data of lists; let i=index">
-					<td>{{data.rotaryTableId}}</td>
-					<td>{{data.username}}</td>
-					<td>{{data.createdTime}}</td>
+				<tr *ngFor="let item of lists; let i=index">
+					<td>{{item.rotaryTableId}}</td>
+					<td>{{item.username}}</td>
+					<td>{{item.createdTime}}</td>
 					<td>{{goodsTypeData[data.type]}}</td>
-					<td><img [src]="data.imageUrl" alt class="table-img" (click)="watchInfo(i, data.rotaryTableId)"/></td>
-					<td>{{data.name}}</td>
-					<td>{{data.lotteryNumber}}</td>
-					<td>{{data.recipients}}</td>
-					<td>{{data.phone}}</td>
-					<td>{{data.cityName}}</td>
-					<td>{{data.provinceName}}</td>
-					<td>{{data.address}}</td>
+					<td><img [src]="item.imageUrl" alt class="table-img" (click)="watchInfo(i, item.rotaryTableId)"/></td>
+					<td>{{item.name}}</td>
+					<td>{{item.lotteryNumber}}</td>
+					<td>{{item.recipients}}</td>
+					<td>{{item.phone}}</td>
+					<td>{{item.cityName}}</td>
+					<td>{{item.provinceName}}</td>
+					<td>{{item.address}}</td>
 				</tr>
 			</tbody>
 		</nz-table>

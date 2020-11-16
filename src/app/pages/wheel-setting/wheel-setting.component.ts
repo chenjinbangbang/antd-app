@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NzModalService, NzMessageService, UploadFile } from 'ng-zorro-antd';
+import { NzModalService, NzMessageService, UploadFile, UploadXHRArgs } from 'ng-zorro-antd';
 import { ActivatedRoute, CanLoad, CanActivate, CanActivateChild, CanDeactivate } from '@angular/router';
 // import { map } from 'rxjs/operators';
 import { Observable, Observer } from 'rxjs';
 import dateformat from 'dateformat';
 
 import { FormControl, FormGroup, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors, AsyncValidator } from '@angular/forms';
+import { ConfigService } from 'src/app/service/config.service';
 
 // 异步验证器
 // class UniqureAlterEgoValidator implements AsyncValidator {
@@ -94,30 +95,29 @@ export class WheelSettingComponent implements OnInit {
   // 表单数据
   form = this.fb.group({
     rotaryTableId: ['', [Validators.required], [this.idAsyncValidator]],
-    name: ['', [Validators.required, Validators.maxLength(10)]],
-    describe: ['', [Validators.required, Validators.maxLength(200)]],
+    title: ['', [Validators.required, Validators.maxLength(10)]],
+    description: ['', [Validators.required, Validators.maxLength(200)]],
     startDate: [null, [Validators.required]],
     endDate: [null, [Validators.required]],
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
     hotStartTime: [null, [Validators.required]],
     hotEndTime: [null, [Validators.required]],
-    isCost1: [false],
-    cost1: [''],
-    isCost2: [false],
-    cost2: [''],
-    isCost3: [false],
-    cost3: [''],
-    isCost4: [false],
-    cost4: [1],
+    everydayFree: [false],
+    everydayFreeCount: [''],
+    topUpPresented: [false],
+    topUpAmount: [''],
+    candyExchange: [false],
+    candyExchangeAmount: [''],
+    pay: [false],
+    payAmount: [1],
     citys: this.fb.array([
-      this.fb.control('深圳'),
-      this.fb.control('广州'),
-      this.fb.control('上海'),
-      this.fb.control('重庆'),
+      this.fb.control({ cityMunicipalityId: 1, cityName: '深圳' })
     ]),
-    prizeRate: ['', [Validators.required]],
-    rule: ['', [Validators.required, Validators.maxLength(1000)]]
+    lotteryCycle: ['', [Validators.required]],
+    rule: ['', [Validators.required, Validators.maxLength(1000)]],
+    backgroundImageUrl: [''],
+    rotaryTableImageUrl: ['']
   })
   get citys() {
     return this.form.get('citys') as FormArray;
@@ -166,46 +166,46 @@ export class WheelSettingComponent implements OnInit {
   // 奖品设置表单数据
   prizeForm = this.fb.group({
     id: ['', [Validators.required]],
-    goodsType: ['1', [Validators.required]],
-    goodsName: ['', [Validators.required, Validators.maxLength(30)]],
+    type: ['CASH', [Validators.required]],
+    name: ['', [Validators.required, Validators.maxLength(30)]],
     goodsCost: [''], // 金额，奖品为现金时必填
     goodsCandyNum: [''], // 糖果数量，奖品为糖果时必填
-    goodsImg: ['', [Validators.required]],
+    imageUrl: ['', [Validators.required]],
     goodsDescribe: ['', [Validators.required, Validators.maxLength(500)]],
     goodsImgList: this.fb.array([]),
-    goodsPrizeRate: ['', [Validators.required, Validators.maxLength(500), this.prizeRateValidator]],
-    goodsNum: ['', [Validators.required]],
-    goodsTotal: ['', [Validators.required]],
+    winnerNumbers: ['', [Validators.required, Validators.maxLength(500), this.prizeRateValidator]],
+    everydayQuantity: ['', [Validators.required]],
+    allQuantity: ['', [Validators.required]],
   })
   prizeId: string = ''
   // 奖品类型数据
   goodsTypeList: any[] = [{
-    value: "1",
+    value: "CASH",
     name: "现金"
   }, {
-    value: "2",
+    value: "ENTITY",
     name: "实物奖品"
   }, {
-    value: "3",
+    value: "CANDY",
     name: "糖果"
   }]
   goodsTypeData: object = {
-    '1': "现金",
-    '2': "实物奖品",
-    '3': "糖果"
+    'CASH': "现金",
+    'ENTITY': "实物奖品",
+    'CANDY': "糖果"
   }
 
-  // 表格数据
-  lists: any[] = [
+  // 奖品表格数据
+  prizeInfos: any[] = [
     // {
     //   id: 'MW0001',
     //   goods: '商品1',
-    //   goodsImg: 'assets/1.png',
-    //   goodsType: '1',
-    //   goodsName: 'xxxx品牌笔记本',
-    //   goodsPrizeRate: "100;200",
-    //   goodsNum: 50,
-    //   goodsTotal: 5000
+    //   imageUrl: 'assets/1.png',
+    //   type: '1',
+    //   name: 'xxxx品牌笔记本',
+    //   winnerNumbers: "100;200",
+    //   everydayQuantity: 50,
+    //   allQuantity: 5000
     // }
   ];
 
@@ -227,6 +227,7 @@ export class WheelSettingComponent implements OnInit {
     private message: NzMessageService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
+    private configService: ConfigService
   ) {
     // route.params.subscribe(data => {
     //   console.log('---', data)
@@ -250,15 +251,39 @@ export class WheelSettingComponent implements OnInit {
     this.route.params.subscribe(data => {
       console.log(data);
       // 若路由存在rotaryTableId，则是编辑活动页面，否则是添加活动
-      if(data.rotaryTableId) {
+      if (data.rotaryTableId) {
         this.form.patchValue({
           rotaryTableId: data.rotaryTableId,
           isEdit: true
         })
+
+        // get the rotary table info details（获取某个活动详情）
+        // this.getDetail();
       }
     })
 
-    this.originForm = JSON.stringify(this.form.value);
+    // this.originForm = JSON.stringify(this.form.value);
+  }
+
+  // get the rotary table info details（获取某个活动详情）
+  getDetail() {
+    this.loading = true;
+    let { rotaryTableId } = this.form.value
+
+    let url = `/api/setting/v1/rotary/table/${rotaryTableId}`;
+    this.configService.request(url, 'GET').subscribe((res: any) => {
+      console.log('get the rotary table info details（获取某个活动详情）', res);
+
+      this.prizeInfos = res.prizeInfos
+
+      res.startTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.startTime);
+      res.endTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.endTime);
+
+      delete res.prizeInfos
+      
+      this.form.patchValue(res);
+      this.loading = false;
+    })
   }
 
   // 抽奖费用的逻辑函数
@@ -280,6 +305,28 @@ export class WheelSettingComponent implements OnInit {
   deleteCity(index) {
     // console.log(index)
     this.citys.removeAt(index)
+  }
+
+  // 上传文件 https://devraffleserviceapi.fortunepay.com.ph/apij/setting/v1/image/upload
+  uploadChange = (val: UploadXHRArgs) => {
+    console.log('上传文件', val);
+
+    let formData = new FormData();
+    formData.append('file', val.file);
+    console.log('file', formData.get('file'))
+
+    let url = '/api/setting/v1/image/upload'
+    this.configService.request(url, 'POST', formData).subscribe((res: any) => {
+      console.log('上传文件成功', res)
+    })
+  }
+
+  change(e){
+    console.log(e);
+    let url = '/api/setting/v1/image/upload'
+    this.configService.request(url, 'POST', { file: e.target.files[0] }).subscribe((res: any) => {
+      console.log('上传文件成功', res)
+    })
   }
 
   // 预览图片
@@ -313,16 +360,16 @@ export class WheelSettingComponent implements OnInit {
     this.message.success('保存成功');
   }
 
-
   // ===================================== 奖品设置 ============================================
   // 点击设置奖品
   settingPrize(e: MouseEvent, i, id) {
+    console.log('选中的奖品', i, id);
     e.preventDefault();
-    // console.log('选中的奖品', id);
+
     this.prizeId = id;
     this.isVisible = true;
 
-    this.prizeForm.patchValue(this.lists[i]);
+    // this.prizeForm.patchValue(this.prizeInfos[i]);
   }
 
   // 取消奖品设置表单
@@ -374,10 +421,10 @@ export class WheelSettingComponent implements OnInit {
   //   console.log(this.profileForm1.value);
   // }
 
-  changePage(page: number) {
-    console.log("当前页", page);
-    this.pageIndex = page;
-  }
+  // changePage(page: number) {
+  //   console.log("当前页", page);
+  //   this.pageIndex = page;
+  // }
 
 
 

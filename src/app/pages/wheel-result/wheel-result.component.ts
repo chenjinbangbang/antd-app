@@ -87,10 +87,10 @@ export class WheelResultComponent implements OnInit {
 
       // 若路由存在rotaryTableId，则说明需要筛选rotaryTableId
       if(data.rotaryTableId) {
-        // 获取大转盘抽奖结果
         this.searchForm.patchValue({
           rotaryTableId: data.rotaryTableId
         })
+        // get the rotary table user lottery page（获取大转盘抽奖结果）
         this.getLists()
       }
     })
@@ -102,7 +102,7 @@ export class WheelResultComponent implements OnInit {
   submitSearch() {
     // console.log(this.searchForm.value);
 
-    // 获取大转盘抽奖结果
+    // get the rotary table user lottery page（获取大转盘抽奖结果）
     this.getLists()
   }
 
@@ -128,26 +128,26 @@ export class WheelResultComponent implements OnInit {
     return params;
   }
 
-  // 大转盘抽奖结果导出excel
+  // export the rotary table user lottery list to excel（大转盘抽奖结果导出excel）
   exportFn() {
     let params = this.setParams();
 
     let url = '/api/setting/v1/rotary/table/user/lottery/export';
     this.configService.request(url, 'GET', params).subscribe((res: any) => {
-      console.log('大转盘抽奖结果导出excel', res);
+      console.log('export the rotary table user lottery list to excel（大转盘抽奖结果导出excel）', res);
 
-      // this.lists = res.data;
+     
     })
   }
 
-  // 获取大转盘抽奖结果
+  // get the rotary table user lottery page（获取大转盘抽奖结果）
   getLists() {
     this.loading = true;
     let params = this.setParams();
 
     let url = '/api/setting/v1/rotary/table/user/lottery';
     this.configService.request(url, 'GET', params).subscribe((res: any) => {
-      console.log('获取大转盘抽奖结果', res);
+      console.log('get the rotary table user lottery page（获取大转盘抽奖结果）', res);
 
       this.lists = res.data;
       this.total = res.pagination.total_page;
@@ -168,7 +168,7 @@ export class WheelResultComponent implements OnInit {
     console.log("当前页", page);
     this.pageIndex = page;
 
-    // 获取大转盘抽奖结果
+    // get the rotary table user lottery page（获取大转盘抽奖结果）
     this.getLists()
   }
 
