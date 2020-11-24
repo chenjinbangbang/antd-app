@@ -17,7 +17,9 @@ import {
   NzMessageModule,
   NzFormModule,
   NzDatePickerModule,
-  NzTimePickerModule
+  NzTimePickerModule,
+  NzSpinModule,
+  NzToolTipModule
 } from 'ng-zorro-antd';
 
 @NgModule({
@@ -41,7 +43,9 @@ import {
     NzMessageModule,
     NzFormModule,
     NzDatePickerModule,
-    NzTimePickerModule
+    NzTimePickerModule,
+    NzSpinModule,
+    NzToolTipModule
   ]
 })
 export class AntdModule { }

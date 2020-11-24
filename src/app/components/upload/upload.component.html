@@ -1,0 +1,27 @@
+<div class="upload-component">
+
+  <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+    (nzOnCancel)="previewVisible = false">
+    <ng-template #modalContent>
+      <img [src]="previewImage" style="width: 100%;" />
+    </ng-template>
+	</nz-modal>
+	
+	<!-- <ng-template #indicatorTemplate><i nz-icon nzType="loading" style="font-size: 24px;"></i> </ng-template> -->
+	
+
+  <div class="upload-img">
+    <div class="img-list" *ngFor="let item of fileList; let i=index">
+      <img [src]="item" alt />
+      <div class="item-bg">
+        <i nz-icon nzType="eye" nzTheme="outline" (click)="previewImg(item)"></i>
+        <i nz-icon nzType="delete" nzTheme="outline" (click)="deleteImg(item)"></i>
+      </div>
+    </div>
+  </div>
+  <div class="upload-icon" *ngIf="fileList.length < length">
+		<nz-spin nzSimple nzTip="Uploading..." [nzSpinning]="isSpinning"></nz-spin>
+		<i nz-icon nzType="plus" class="icon-plus" *ngIf="!isSpinning"></i>
+		<input type="file" class="upload-icon-file" [multiple]="multiple" (change)="addImg($event)" />
+  </div>
+</div>

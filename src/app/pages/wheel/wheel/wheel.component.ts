@@ -11,16 +11,17 @@ import { Observable } from 'rxjs';
 })
 export class WheelComponent implements OnInit {
   rotationTableId: string = ""; // 搜索关键词，活动id
-  total: number = 22; // 总页数
+  total: number = 0; // 总页数
   pageIndex: number = 1; // 当前页码
   loading: boolean = false; // 加载中
   rotaryTableId: string = ""; // 当前选中的活动
   operationType: number = 1; // 操作类型，1：开启，2：停用，3：删除，4：已关联内容，无法删除
-  operationTypeText: object = {
-    1: "开启",
-    2: "停用",
-    3: "删除"
-  }
+  // operationTypeText: object = {
+  //   1: "开启",
+  //   2: "停用",
+  //   3: "删除"
+  // }
+  isAllStop: boolean = false; // 是否全部转盘活动都停止
 
   isVisible: boolean = false; // 模态框
   modalContent: string = ""; // 模态框标题
@@ -102,8 +103,12 @@ export class WheelComponent implements OnInit {
     this.configService.request(url, 'GET', params).subscribe((res: any) => {
       console.log('get the rotary table page（获取大转盘列表）', res);
 
+      this.isAllStop = res.data.every(item => {
+        return item.status === 'DISABLED'
+      });
+
       this.lists = res.data;
-      this.total = res.pagination.total_page;
+      this.total = res.total_counts;
       this.loading = false;
     })
   }
@@ -127,7 +132,7 @@ export class WheelComponent implements OnInit {
 
   // 添加活动
   createFn() {
-    this.router.navigate(["/wheel-setting"])
+    this.router.navigate(["/wheel/wheel-setting"])
   }
 
   // 开启活动
@@ -136,7 +141,7 @@ export class WheelComponent implements OnInit {
 
     this.rotaryTableId = rotaryTableId;
     this.operationType = 1;
-    this.modalContent = "确定开启吗？";
+    this.modalContent = "Are you sure to start？";
     this.isVisible = true;
   }
 
@@ -146,7 +151,7 @@ export class WheelComponent implements OnInit {
 
     this.rotaryTableId = rotaryTableId;
     this.operationType = 2;
-    this.modalContent = "确定停用吗？";
+    this.modalContent = "Are you sure to close this activity？";
     this.isVisible = true;
   }
 
@@ -154,7 +159,7 @@ export class WheelComponent implements OnInit {
   editFn(rotaryTableId) {
     console.log('编辑活动', rotaryTableId);
 
-    this.router.navigate(["/wheel-setting", { rotaryTableId }])
+    this.router.navigate(["/wheel/wheel-setting", { rotaryTableId }])
   }
 
   // 抽奖结果
@@ -170,7 +175,7 @@ export class WheelComponent implements OnInit {
 
     this.rotaryTableId = rotaryTableId;
     this.operationType = 3;
-    this.modalContent = "确定删除吗？";
+    this.modalContent = "Are you sure to delete？";
     this.isVisible = true;
 
     // if (true) {
@@ -207,7 +212,7 @@ export class WheelComponent implements OnInit {
       this.getLists()
 
       this.isVisible = false;
-      this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
+      // this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
     })
   }
 
@@ -221,7 +226,7 @@ export class WheelComponent implements OnInit {
       this.getLists()
 
       this.isVisible = false;
-      this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
+      // this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
     })
   }
 

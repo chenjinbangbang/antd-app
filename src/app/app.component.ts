@@ -9,8 +9,4 @@ export class AppComponent {
   title = 'antd-app';
   value = '';
   navSelect: boolean = true;
-
-  navClick(val){
-    console.log(val)
-  }
 }

@@ -1,13 +1,17 @@
 .home {
-  display: flex;
+  // display: flex;
 
-  [nz-menu] {
-    width: 160px;
-  }
-
-  .content {
-    flex: 1;
-    margin-top: 20px;
-    margin-left: 20px;
+  .nav-list{
+    ul{
+      display: flex;
+      li{
+        a{
+          display: inline-block;
+          height: 60px;
+          line-height: 60px;
+          padding: 0 20px;
+        }
+      }
+    }
   }
 }

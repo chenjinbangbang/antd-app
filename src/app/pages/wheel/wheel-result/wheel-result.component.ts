@@ -15,7 +15,8 @@ export class WheelResultComponent implements OnInit {
     rotaryTableId: [''],
     date: [''],
     type: [''],
-    addressStatus: [''],
+    status: [''],
+    // addressStatus: [''],
     username: [''],
     name: [''],
     phone: [''],
@@ -25,28 +26,54 @@ export class WheelResultComponent implements OnInit {
   // 奖品类型数据
   goodsTypeList: any[] = [{
     value: "",
-    name: "全部"
+    name: "All"
   }, {
     value: "CASH",
-    name: "现金"
+    name: "Cash"
   }, {
     value: "ENTITY",
-    name: "实物奖品"
+    name: "Entity"
   }, {
     value: "CANDY",
-    name: "糖果"
+    name: "Candy"
+  }, {
+    value: "NOTHING",
+    name: "Nothing"
+  }]
+  //  RECEIVE, FINISH, AWAIT, GIVE_UP, COLLECT, DELIVERED
+  statusList: any[] = [{
+    value: "",
+    name: "All"
+  },{
+    value: "RECEIVE",
+    name: "RECEIVE"
+  },{
+    value: "FINISH",
+    name: "FINISH"
+  },{
+    value: "AWAIT",
+    name: "AWAIT"
+  },{
+    value: "GIVE_UP",
+    name: "GIVE_UP"
+  },{
+    value: "COLLECT",
+    name: "COLLECT"
+  },{
+    value: "DELIVERED",
+    name: "DELIVERED"
   }]
   // 地址数据
-  addressList: any[] = [{
-    value: "",
-    name: "全部"
-  }, {
-    value: "HAVE",
-    name: "已有地址"
-  }, {
-    value: "NONE",
-    name: "没有地址"
-  }]
+  // addressList: any[] = [{
+  //   value: "",
+  //   name: "全部"
+  // }, {
+  //   value: "HAVE",
+  //   name: "已有地址"
+  // }, {
+  //   value: "NONE",
+  //   name: "没有地址"
+  // }]
 
   // 活动结果表格数据
   lists: any[] = [
@@ -61,19 +88,25 @@ export class WheelResultComponent implements OnInit {
     //   goodsTotal: 5000
     // }
   ];
-  total: number = 1; // 总页数
+  total: number = 0; // 总页数
   pageIndex: number = 1; // 当前页码
   loading: boolean = false; // 加载中
   rotaryTableId: string = ""; // 当前选中的活动id
   selectIndex: number = 0; // 当前选中的活动索引
   selectRotary: any = {}; // 当前选中的活动数据
-  previewVisible: boolean = false // 预览的图片弹框
+  previewVisible: boolean = false; // 预览的图片弹框
   goodsTypeData: object = {
-    "CASH": "现金",
-    "ENTITY": "实物奖品",
-    "CANDY": "糖果"
-  }
+    "CASH": "Cash",
+    "ENTITY": "Entity",
+    "CANDY": "Candy",
+    "NOTHING": "Nothing"
+  };
   // entityImageUrls: any[] = [] // 某个活动id的奖品图片
+  selectId: string = ''; // 选中的活动结果id
+  deliveredVisible: boolean = false; // 确认收货弹框
+  deliveredForm = this.fb.group({
+    remark: ['', [Validators.required]]
+  })
 
   constructor(
     private route: ActivatedRoute,
@@ -90,12 +123,11 @@ export class WheelResultComponent implements OnInit {
         this.searchForm.patchValue({
           rotaryTableId: data.rotaryTableId
         })
-        // get the rotary table user lottery page（获取大转盘抽奖结果）
-        this.getLists()
       }
+
+      // get the rotary table user lottery page（获取大转盘抽奖结果）
+      this.getLists()
     })
-
-
   }
 
   // 查询
@@ -136,7 +168,7 @@ export class WheelResultComponent implements OnInit {
     this.configService.request(url, 'GET', params).subscribe((res: any) => {
       console.log('export the rotary table user lottery list to excel（大转盘抽奖结果导出excel）', res);
 
-     
+      
     })
   }
 
@@ -150,7 +182,7 @@ export class WheelResultComponent implements OnInit {
       console.log('get the rotary table user lottery page（获取大转盘抽奖结果）', res);
 
       this.lists = res.data;
-      this.total = res.pagination.total_page;
+      this.total = res.total_counts;
       this.loading = false;
     })
   }
@@ -170,6 +202,47 @@ export class WheelResultComponent implements OnInit {
 
     // get the rotary table user lottery page（获取大转盘抽奖结果）
     this.getLists()
+  }
+
+  // 显示确认收货弹框
+  showconfirmDelivered(id){
+    this.selectId = id;
+    this.deliveredVisible = true;
+
+    this.deliveredForm.reset();
+  }
+
+  // 取消奖品设置表单
+  deliveredCancel = (e: MouseEvent) => {
+    e.preventDefault();
+
+    this.deliveredVisible = false;
+  }
+
+  // 点击确认收货
+  confirmDelivered() {
+
+    if(this.deliveredForm.valid) {
+      let params = {
+        id: this.selectId,
+        remark: this.deliveredForm.value.remark
+      };
+
+      // Deliver the entity prizes（确认收货）
+      let url = '/api/setting/v1/rotary/table/user/lottery/delivery';
+      this.configService.request(url, 'POST', params).subscribe((res: any) => {
+        console.log('Deliver the entity prizes（确认收货）', res);
+
+        // get the rotary table user lottery page（获取大转盘抽奖结果）
+        this.getLists()
+      })
+    } else {
+      for (const i in this.deliveredForm.controls) {
+        this.deliveredForm.controls[i].markAsDirty();
+        this.deliveredForm.controls[i].updateValueAndValidity();
+      }
+    }
+
   }
 
 }

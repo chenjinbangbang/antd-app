@@ -2,13 +2,12 @@
   <!-- <button nz-button nzType="primary">按钮</button>
   <input nz-input placeholder="Basic usage" /> -->
 
-  <ul nz-menu nzMode="inline" (nzClick)="navClick($event)">
-    <li nz-menu-item nzMatchRouter><a routerLink="/wheel">大转盘</a></li>
-    <li nz-menu-item nzMatchRouter><a routerLink="/wheel-result">大转盘活动结果</a></li>
-    <li nz-menu-item nzMatchRouter><a routerLink="/activity">任务管理</a></li>
-  </ul>
-
-  <div class="content">
-    <router-outlet></router-outlet>
+  <div class="nav-list">
+    <ul>
+      <li><a routerLink="/">首页</a></li>
+      <li><a routerLink="/wheel">大转盘</a></li>
+    </ul>
   </div>
+
+  <router-outlet></router-outlet>
 </div>

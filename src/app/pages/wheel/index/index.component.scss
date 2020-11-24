@@ -1,0 +1,12 @@
+.wheel-content {
+	display: flex;
+  .ant-menu {
+    width: 280px;
+  }
+
+  .content {
+    flex: 1;
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+}

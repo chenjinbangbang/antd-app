@@ -73,7 +73,7 @@
       <button nz-button nzType="default" (click)="moveDown()" [disabled]="selectArr.length !== 1">下移</button>
     </div>
 
-    <nz-table [nzData]="lists" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" [nzTotal]="total" [nzLoading]="loading"
+    <nz-table [nzData]="lists" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" [nzTotal]="total" [nzLoading]="loading"
       [nzShowQuickJumper]="true" [nzShowSizeChanger]="true" (nzPageSizeChange)="pageSizeChange($event)"
       (nzPageIndexChange)="changePage($event)">
       <thead>

@@ -1,0 +1,189 @@
+<div class="wheel-result">
+
+  <nz-modal [nzVisible]="previewVisible" [nzTitle]="selectRotary.name" [nzContent]="modalContent" [nzFooter]="null"
+    (nzOnCancel)="previewVisible = false" [nzWidth]="600">
+    <ng-template #modalContent>
+      <div class="prize-img">
+        <!-- <div class="prize-title">奖品名称</div> -->
+        <div class="prize-note">{{selectRotary.description}}</div>
+        <div class="prize-img-list">
+          <img *ngFor="let item of selectRotary.entityImageUrls" [src]="item" alt />
+        </div>
+        <div class="prize-footer">
+          <button nz-button (click)="previewVisible = false">Closed</button>
+        </div>
+      </div>
+    </ng-template>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="deliveredVisible" nzTitle="" [nzFooter]="null" [nzWidth]="1000" [nzClosable]="false"
+    (nzOnCancel)="isVisible = false">
+    <div class="wheel-modal">
+      <div class="wheel-title">Delivery Confirm</div>
+      <div class="wheel-note">If you confirm, the prize status will be modified to "Delivered"</div>
+      <div class="wheel-form">
+        <form nz-form nzLayout="vertical" [formGroup]="deliveredForm" (ngSubmit)="confirmDelivered()">
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="remark">Remark</nz-form-label>
+            <nz-form-control [nzSpan]="24" nzHasFeedback nzErrorTip="Input Remark">
+              <textarea nz-input formControlName="remark" id="remark" placeholder="Input Remark"
+                [nzAutosize]="{ minRows: 6, maxRows: 8 }"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item class="form-footer">
+            <nz-form-control>
+              <button nz-button nzType="default" (click)="deliveredCancel($event)">Cancel</button>
+              <button nz-button nzType="primary" style="margin-left: 20px;">Save</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+  </nz-modal>
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>Marketing Activity</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Fortune Wheel</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Participation Records</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="search">
+
+    <form nz-form nzLayout="inline" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+      <nz-form-item>
+        <nz-form-label>Activity</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="rotaryTableId" id="rotaryTableId" placeholder="Enter activity title or ID" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Participating Time</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="date" [nzShowTime]="true"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Prize Type</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="type">
+            <nz-option *ngFor="let item of goodsTypeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Status</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="status">
+            <nz-option *ngFor="let item of statusList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- <nz-form-item>
+				<nz-form-label>奖品状态</nz-form-label>
+				<nz-form-control>
+					<nz-select formControlName="addressStatus">
+						<nz-option *ngFor="let item of addressList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+						</nz-option>
+					</nz-select>
+				</nz-form-control>
+			</nz-form-item> -->
+
+      <nz-form-item>
+        <nz-form-label>User Account</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="username" placeholder="Input User Account" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Prize Title</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="name" placeholder="Input Prize Title" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Mobile Phone</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="phone" placeholder="Input Mobile Phone" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>City</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="cityName" placeholder="Input City" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Specific Address</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="provinceName" placeholder="Input Specific Address" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary">Search</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+
+  <div class="table">
+    <div class="table-top">
+      <button nz-button nzType="primary" (click)="exportFn()">Export</button>
+    </div>
+    <nz-table [nzData]="lists" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" nzPageSize="10" [nzTotal]="total" [nzLoading]="loading"
+      [nzBordered]="true" [nzShowQuickJumper]="true" (nzPageIndexChange)="changePage($event)">
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>User Account</th>
+          <th>User Name</th>
+          <th>Participating Time</th>
+          <th>Prize Type</th>
+          <th>Prize</th>
+          <!-- <th>金额</th> -->
+          <th>Address</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of lists; let i=index">
+          <td>{{item.title}}</td>
+          <td>{{item.userId}}</td>
+          <td>{{item.username || ''}}</td>
+          <td>{{item.createdTime}}</td>
+          <td>{{goodsTypeData[item.type]}}</td>
+          <td>
+            <img [src]="item.imageUrl" alt class="table-img" (click)="watchInfo(i, item.rotaryTableId)" />
+            <span>{{item.name}}</span>
+          </td>
+          <td>
+            <p>Addressee：{{item.recipients}}</p>
+            <p>Tel：{{item.phone}}</p>
+            <p>Addr：{{item.address}}</p>
+            <p>province：{{item.provinceName}}</p>
+          </td>
+          <td>{{item.status}}</td>
+          <td>
+            <button nz-button (click)="showconfirmDelivered(item.rotaryTableId)"
+              *ngIf="item.status === 'Collected'; then other">Delivery Confirm</button>
+            <span #other>{{item.description}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+</div>

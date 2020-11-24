@@ -1,8 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+// 路由拦截器
+import { NoopInterceptor } from './http-interceptors/noop-interceptor';
 
 // 路由
 import { AppRoutingModule } from './module/app-routing/app-routing.module'; // CLI imports AppRoutingModule
@@ -18,27 +21,38 @@ registerLocaleData(en);
 import { NZ_I18N, en_US } from 'ng-zorro-antd';
 
 import { AppComponent } from './app.component';
-import { StepComponent } from './components/step/step.component';
-import { WheelComponent } from './pages/wheel/wheel.component';
-import { WheelResultComponent } from './pages/wheel-result/wheel-result.component';
-import { WheelSettingComponent } from './pages/wheel-setting/wheel-setting.component';
+// import { StepComponent } from './components/step/step.component';
+import { HomeComponent } from './pages/home/home.component';
+
+import { IndexComponent } from './pages/wheel/index/index.component';
+import { WheelComponent } from './pages/wheel/wheel/wheel.component';
+import { WheelResultComponent } from './pages/wheel/wheel-result/wheel-result.component';
+import { WheelSettingComponent } from './pages/wheel/wheel-setting/wheel-setting.component';
+
 import { ActivityComponent } from './pages/activity/activity.component';
+import { UploadComponent } from './components/upload/upload.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    WheelComponent,
-    WheelResultComponent,
-    WheelSettingComponent,
-    StepComponent,
-    ActivityComponent
+    HomeComponent,
+
+    IndexComponent,
+    // WheelComponent,
+    // WheelResultComponent,
+    // WheelSettingComponent,
+    // StepComponent,
+    
+    ActivityComponent,
+    // UploadComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
+
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
 
@@ -47,7 +61,8 @@ import { ActivityComponent } from './pages/activity/activity.component';
     AntdModule
   ],
   providers: [
-    { provide: NZ_I18N, useValue: en_US }
+    { provide: NZ_I18N, useValue: en_US },
+    { provide: HTTP_INTERCEPTORS, useClass: NoopInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

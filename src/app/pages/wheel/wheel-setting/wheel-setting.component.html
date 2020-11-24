@@ -1,0 +1,455 @@
+<div class="wheel-setting">
+
+  <!-- 选择城市弹框 -->
+  <nz-modal [(nzVisible)]="isCityVisible" nzTitle="" [nzFooter]="null" [nzWidth]="800" [nzClosable]="false"
+    (nzOnCancel)="isCityVisible = false">
+    <div class="wheel-modal">
+      <div class="wheel-title">City Rules</div>
+
+      <div class="city-modal">
+        <div class="choose-city">
+          <div class="choose-title">Selected city：</div>
+          <ul>
+            <li *ngFor="let item of selectCityList; let i=index">{{item.cityName}}</li>
+          </ul>
+        </div>
+
+        <div class="city-select">
+          <span>Select region：</span>
+          <nz-select [(ngModel)]="region_code" nzPlaceHolder="Select region" id="" [nzAllowClear]="true" (ngModelChange)="changeRegion($event)">
+            <nz-option *ngFor="let item of regionList; let i=index" [nzValue]="item.code" [nzLabel]="item.region_name">
+            </nz-option>
+          </nz-select>
+          <span style="margin-left: 20px;">Select province：</span>
+          <nz-select [(ngModel)]="province_code" nzPlaceHolder="Select province" id="province_code" [nzAllowClear]="true" (ngModelChange)="changeProvince($event)">
+            <nz-option *ngFor="let item of provinceList; let i=index" [nzValue]="item.province_code" [nzLabel]="item.province_name">
+            </nz-option>
+          </nz-select>
+        </div>
+
+        <div class="city-list">
+          <ul>
+            <li *ngFor="let item of cityList; let i=index" (click)="selectCity(item)" [ngClass]="{active: selectCityIds.includes(item.city_municipality_id)}">{{item.city_name}}</li>
+          </ul>
+        </div>
+
+        <div class="city-footer">
+          <button nz-button nzType="default" (click)="isCityVisible = false">Cancel</button>
+          <button nz-button nzType="primary" style="margin-left: 20px;" (click)="saveCity()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </nz-modal>
+
+  <!-- 奖品设置弹框 -->
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="1000" [nzClosable]="false"
+    (nzOnCancel)="isVisible = false">
+    <div class="wheel-modal">
+
+      <div class="wheel-title">Prize setting</div>
+
+      <div class="wheel-form">
+        <form nz-form nzLayout="vertical" [formGroup]="prizeForm" (ngSubmit)="submitPrizeForm()">
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="type">Prize type</nz-form-label>
+            <nz-form-control [nzSpan]="8" nzHasFeedback nzErrorTip="Select prize type">
+              <nz-select formControlName="type" nzPlaceHolder="Select prize type" id="type" [nzAllowClear]="true">
+                <nz-option *ngFor="let item of goodsTypeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item nz-row [nzFlex]="true">
+            <div nz-col nzSpan="8">
+              <nz-form-label nzRequired nzFor="name">Prize Title</nz-form-label>
+              <nz-form-control nzHasFeedback nzErrorTip="Enter prize title">
+                <input nz-input formControlName="name" id="name" maxlength="30" placeholder="Select prize title" />
+              </nz-form-control>
+            </div>
+
+            <div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.type === 'CASH'">
+              <nz-form-label nzRequired nzFor="amount">Sum</nz-form-label>
+              <nz-form-control nzHasFeedback nzErrorTip="Enter sum">
+                <nz-input-number formControlName="amount" [nzMin]="1" [nzMax]="99999" [nzStep]="1">
+                </nz-input-number>
+              </nz-form-control>
+            </div>
+
+            <div nz-col nzSpan="7" nzOffset="1" *ngIf="prizeForm.value.type === 'CANDY'">
+              <nz-form-label nzRequired nzFor="amount">Sum of Candy</nz-form-label>
+              <nz-form-control nzHasFeedback nzErrorTip="Enter sum of candy">
+                <nz-input-number formControlName="amount" [nzMin]="1" [nzMax]="9999" [nzStep]="1">
+                </nz-input-number>
+              </nz-form-control>
+            </div>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzRequired nzFor="description">Description</nz-form-label>
+            <nz-form-control nzHasFeedback nzErrorTip="Enter description">
+              <textarea nz-input formControlName="description" id="description" maxlength="500" placeholder="Enter description"
+                [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+            </nz-form-control>
+            <div class="text-length">{{prizeForm.value.description.length}}/500</div>
+          </nz-form-item>
+
+          <nz-form-item class="goods-img">
+            <nz-form-label nzRequired>Thumbnail</nz-form-label>
+
+            <app-upload nz-col nzSpan="24" [length]="1" [fileList]="imageUrlList"
+							(changeFile)="changeFile($event, 'imageUrlList')"></app-upload>
+          </nz-form-item>
+
+          <nz-form-item nz-row>
+            <div style="display: flex;">
+              <nz-form-label>Prize Images</nz-form-label>
+              <div class="form-item-note">（JPG and PNG images within 1M limit, with a maximum of 4 images）</div>
+            </div>
+
+            <app-upload nz-col nzSpan="24" [length]="4" [multiple]="true" [fileList]="entityImageUrls"
+              (changeFile)="changeFile($event, 'entityImageUrls')"></app-upload>
+          </nz-form-item>
+
+          <nz-form-item *ngIf="true">
+            <div style="display: flex;">
+              <nz-form-label nzRequired nzFor="winnerNumbers">Probability of Winning</nz-form-label>
+              <div class="form-item-note">（Please fill the sequential No.  of winning, seperate them with semicolon）</div>
+            </div>
+
+            <nz-form-control nzHasFeedback [nzErrorTip]="goodsPrizeRateTip">
+              <textarea nz-tooltip [nzTooltipTitle]="'The probability of winning is currently set：' + winnerNumbers.join(';')" nz-input formControlName="winnerNumbers" id="winnerNumbers" maxlength="500"
+                placeholder="Enter probability of winning" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+              <ng-template #goodsPrizeRateTip let-control>
+                <ng-container *ngIf="control.hasError('required');">Please enter the probability of winning</ng-container>
+                <ng-container *ngIf="control.hasError('regError')">Only Numbers and half angles can be entered;</ng-container>
+                <ng-container *ngIf="control.hasError('inputError')">Half Angle for multiple data;separated</ng-container>
+                <ng-container *ngIf="control.hasError('rangeError')">You can only enter positive integers from 1 to 1000</ng-container>
+                <ng-container *ngIf="control.hasError('repeatError')">The lottery probability is not allowed to be repeated</ng-container>
+                <ng-container *ngIf="control.hasError('repeatEAllError')">The draw probability of all prizes cannot be repeated</ng-container>
+              </ng-template>
+            </nz-form-control>
+            <div class="text-length">{{prizeForm.value.winnerNumbers.length}}/500</div>
+          </nz-form-item>
+
+          <nz-form-item nz-row [nzFlex]="true" *ngIf="true">
+            <div nz-col nzSpan="12">
+              <nz-form-label nzRequired nzFor="everydayQuantity">Daily Inventory</nz-form-label>
+              <nz-form-control nzHasFeedback nzErrorTip="Enter daily inventory">
+                <nz-input-number formControlName="everydayQuantity" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
+                </nz-input-number>
+              </nz-form-control>
+            </div>
+
+            <div nz-col nzSpan="12" *ngIf="true">
+              <nz-form-label nzFor="allQuantity">Total Inventory</nz-form-label>
+              <nz-form-control nzHasFeedback nzErrorTip="Enter total inventory">
+                <nz-input-number formControlName="allQuantity" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
+                </nz-input-number>
+              </nz-form-control>
+            </div>
+          </nz-form-item>
+
+          <nz-form-item class="form-footer">
+            <nz-form-control>
+              <button nz-button nzType="default" (click)="prizeCancel($event)">Cancel</button>
+              <button nz-button nzType="primary" style="margin-left: 20px;">Save</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+  </nz-modal>
+
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>Marketing Activity</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Fortune Wheel</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="form">
+    <form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="rotaryTableId">ID</nz-form-label>
+        <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback [nzErrorTip]="idTip">
+          <input nz-input formControlName="rotaryTableId" id="rotaryTableId" placeholder="Automatically generated by system" [disabled]="false" />
+          <ng-template #idTip let-control>
+            <ng-container *ngIf="control.hasError('required')">Input ID</ng-container>
+            <!-- <ng-container *ngIf="control.hasError('duplicated')">此Id已存在</ng-container> -->
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="title">Activity Title</nz-form-label>
+        <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback nzErrorTip="Enter activity title">
+          <input nz-input formControlName="title" id="title" maxlength="10" placeholder="Enter activity title" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="description">Activity Description</nz-form-label>
+        <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback nzErrorTip="Enter activity description">
+          <textarea nz-input formControlName="description" id="description" maxlength="200"
+            placeholder="Enter activity description" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+        </nz-form-control>
+        <div class="text-length">{{form.value.description.length}}/200</div>
+      </nz-form-item>
+
+      <nz-form-item [nzFlex]="true">
+        <nz-form-label nzRequired>Activity Time</nz-form-label>
+
+        <nz-form-label [nzOffset]="1">Beginning Date</nz-form-label>
+        <nz-form-control nzHasFeedback nzErrorTip="Select beginning date">
+          <nz-date-picker formControlName="startDate"></nz-date-picker>
+        </nz-form-control>
+        <nz-form-label [nzOffset]="1">Ending Date</nz-form-label>
+        <nz-form-control nzHasFeedback nzErrorTip="Select ending date">
+          <nz-date-picker formControlName="endDate"></nz-date-picker>
+        </nz-form-control>
+
+        <nz-form-label [nzOffset]="1">Every Day</nz-form-label>
+        <nz-form-control nzHasFeedback nzErrorTip="Select start time">
+          <nz-time-picker formControlName="startTime"></nz-time-picker>
+        </nz-form-control>
+        <nz-form-control>
+          <span style="margin: 0 5px;">-</span>
+        </nz-form-control>
+        <nz-form-control nzHasFeedback nzErrorTip="Select end time">
+          <nz-time-picker formControlName="endTime"></nz-time-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item [nzFlex]="true">
+        <nz-form-label nzRequired>Warm-up Time</nz-form-label>
+
+        <nz-form-label [nzOffset]="1">Beginning Date</nz-form-label>
+        <nz-form-control nzHasFeedback nzErrorTip="Select beginning date">
+          <nz-date-picker formControlName="prepareStartDate" [nzShowTime]="true"></nz-date-picker>
+        </nz-form-control>
+
+        <nz-form-label [nzOffset]="1">Ending Date</nz-form-label>
+        <nz-form-control nzHasFeedback nzErrorTip="Select ending date">
+          <nz-date-picker formControlName="prepareEndDate" [nzShowTime]="true"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item nz-row>
+        <nz-form-label nzRequired>How to get a chance to spin fortune wheel</nz-form-label>
+
+        <div nz-col nzSm="24">
+          <nz-form-control>
+            <div class="form-checkbox">
+              <label nz-checkbox formControlName="everydayFree"
+                (ngModelChange)="costChange($event, 'everydayFreeCount')">Each user gets</label>
+              <div class="form-checkbox-right">
+                <nz-input-number formControlName="everydayFreeCount" [nzMin]="0" [nzMax]="9999" [nzStep]="1"
+                  [nzDisabled]="!form.value.everydayFree">
+                </nz-input-number>
+                <span class="span-right">chance(s) one day during activity period for free</span>
+              </div>
+            </div>
+          </nz-form-control>
+
+          <!-- <nz-form-control>
+            <div class="form-checkbox">
+              <label nz-checkbox formControlName="topUpPresented"
+                (ngModelChange)="costChange($event, 'topUpAmount')">充值送免费抽奖机会</label>
+              <div class="form-checkbox-right">
+                <span class="span-left">1次性充值</span>
+                <nz-input-number formControlName="topUpAmount" [nzMin]="1" [nzMax]="9999" [nzStep]="1"
+                  [nzDisabled]="!form.value.topUpPresented">
+                </nz-input-number>
+                <span class="span-right">元以上可增加1次抽奖机会</span>
+              </div>
+            </div>
+          </nz-form-control> -->
+
+          <nz-form-control>
+            <div class="form-checkbox">
+              <label nz-checkbox formControlName="candyExchange"
+                (ngModelChange)="costChange($event, 'candyExchangeAmount')">Spend</label>
+              <div class="form-checkbox-right">
+                <nz-input-number formControlName="candyExchangeAmount" [nzMin]="1" [nzMax]="9999" [nzStep]="1"
+                  [nzDisabled]="!form.value.candyExchange">
+                </nz-input-number>
+                <span class="span-right">candies to get a chance</span>
+              </div>
+            </div>
+          </nz-form-control>
+
+          <nz-form-control>
+            <div class="form-checkbox">
+              <label nz-checkbox formControlName="pay" (ngModelChange)="costChange($event, 'payAmount')">Spend</label>
+              <div class="form-checkbox-right">
+                <!-- <span class="span-left">支付</span> -->
+                <nz-input-number formControlName="payAmount" [nzMin]="0.01" [nzMax]="9999.99" [nzStep]="0.01"
+                  [nzDisabled]="!form.value.pay">
+                </nz-input-number>
+                <span class="span-right">peso(s) to get a chance</span>
+              </div>
+            </div>
+          </nz-form-control>
+
+          <div *ngIf="form.errors?.costError" class="danger" style="margin-top: 10px;">You can choose more than one of the above three options, but you must choose one</div>
+        </div>
+      </nz-form-item>
+
+      <nz-form-item [nzFlex]="true">
+        <nz-form-label>City Rules</nz-form-label>
+
+        <div nzSm="24">
+          <div class="form-city">
+            <div class="city-top">
+              <!-- <span>城市</span> -->
+              <span></span>
+              <span (click)="settingCitys()">Setting</span>
+            </div>
+            <ul class="city-list">
+              <li *ngFor="let city of citys; let i=index">
+                <span>{{city.cityName}}</span>
+                <i nz-icon nzType="close" nzTheme="outline" (click)="deleteCity(i)"></i>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nz-form-item>
+
+      <nz-form-item [nzFlex]="true">
+        <nz-form-label nzRequired>Odds by total number of people</nz-form-label>
+
+        <nz-form-control [nzSm]="18">
+          <nz-input-number formControlName="lotteryCycle" [nzMin]="1" [nzMax]="9999999" [nzStep]="1"
+            [nzDisabled]="false">
+          </nz-input-number>
+          <!-- <span style="margin-left: 10px;">人循环</span> -->
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="rule">Activity Rules</nz-form-label>
+        <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback nzErrorTip="Enter activity rules">
+          <textarea nz-input formControlName="rule" id="rule" maxlength="1000" placeholder="Enter activity rules"
+            [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+        </nz-form-control>
+        <div class="text-length">{{form.value.rule.length}}/1000</div>
+      </nz-form-item>
+
+      <nz-form-item>
+        <div class="table">
+          <nz-table #basicTable [nzData]="prizes" [nzLoading]="loading" [nzShowPagination]="false" [nzBordered]="true">
+            <thead>
+              <tr>
+                <th nzWidth="80px">No</th>
+                <th nzWidth="100px">Thumbnail</th>
+                <th nzWidth="120px">Prize Type</th>
+                <th>Prize Title</th>
+                <th>Probability of Winning</th>
+                <th nzWidth="120px">Daily Inventory</th>
+                <th nzWidth="120px">Total Inventory</th>
+                <th nzWidth="120px">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of prizes; let i=index">
+                <td>{{ item.id }}</td>
+                <td><img *ngIf="item.imageUrl" [src]="item.imageUrl" alt class="table-img" /></td>
+                <td>{{goodsTypeData[item.type]}}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.type !== 'CANDY' ? item.winnerNumbers : '' }}</td>
+                <td>{{ item.type !== 'CANDY' ? item.everydayQuantity : '' }}</td>
+                <td>{{ item.type !== 'CANDY' ? item.allQuantity : '' }}</td>
+                <td class="operation">
+                  <button nz-button [ngClass]="{'text-success': item.imageUrl || item.description}"
+                    (click)="settingPrize($event, i, item.id)">Setting</button>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </nz-form-item>
+
+      <nz-form-item nz-row>
+        <div style="display: flex;">
+          <nz-form-label nzRequired>Background Template</nz-form-label>
+          <div class="form-item-note">（JPG and PNG images within 1M limit）</div>
+        </div>
+
+        <app-upload nz-col nzSpan="24" [length]="1" [fileList]="backgroundFileList"
+          (changeFile)="changeFile($event, 'backgroundFileList')"></app-upload>
+      </nz-form-item>
+
+      <nz-form-item nz-row>
+        <div style="display: flex;">
+          <nz-form-label nzRequired>Spinning Wheel Template</nz-form-label>
+          <div class="form-item-note">（JPG and PNG images within 1M limit）</div>
+        </div>
+
+        <app-upload nz-col nzSpan="24" [length]="1" [fileList]="rotaryTableFileList"
+          (changeFile)="changeFile($event, 'rotaryTableFileList')"></app-upload>
+      </nz-form-item>
+
+      <nz-form-item class="form-footer">
+        <nz-form-control>
+          <button nz-button nzType="default" (click)="cancel($event)">Cancel</button>
+          <button nz-button nzType="primary" style="margin-left: 20px;">Save</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+    <!-- Favorite color: <input type="text" [formControl]="name" />
+		{{name.value}}
+		<button (click)="updateName()">改变值</button>
+
+		<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+			<label>First Name: <input type="text" formControlName="firstName" /></label>
+			<label>Last Name: <input type="text" formControlName="lastName" /></label>
+
+			<div formGroupName='address'>
+				<h3>Address</h3>
+				<label>Street: <input formControlName="street" /></label>
+				<label>City <input formControlName="city" /></label>
+				<label>State: <input formControlName="state" /></label>
+				<label>Zip: <input formControlName="zip" /></label>
+			</div>
+			<div *ngIf="profileForm.errors?.identityRevealed && (profileForm.touched || profileForm.dirty)">firstName 不能等于
+				lastName</div>
+
+			<button (click)="updateProfile()">更改一部分值</button>
+
+			<button type="submit" [disabled]="!profileForm.valid">提交</button>
+		</form>
+
+		<br />
+		<br />
+		<br />
+
+		<form [formGroup]="profileForm1" (ngSubmit)="onSubmit1()">
+			<label>First Name: <input type="text" formControlName="firstName" /></label>
+			<label>Last Name: <input type="text" formControlName="lastName" /></label>
+
+			<div formGroupName='address'>
+				<h3>Address</h3>
+				<label>Street: <input formControlName="street" /></label>
+				<label>City <input formControlName="city" /></label>
+				<label>State: <input formControlName="state" /></label>
+				<label>Zip: <input formControlName="zip" /></label>
+			</div>
+
+			{{profileForm1.status}}
+
+			<div formArrayName='aliases'>
+				<h3>Aliases</h3>
+				<button (click)="addAlias()">Add alias</button>
+				<div *ngFor="let alias of aliases.controls; let i=index">
+					<label>Alias: <input [formControlName]="i" /></label>
+				</div>
+			</div>
+
+			<button (click)="updateProfile()">更改一部分值</button>
+
+			<button type="submit" [disabled]="!profileForm1.valid">提交</button>
+		</form> -->
+  </div>
+
+</div>

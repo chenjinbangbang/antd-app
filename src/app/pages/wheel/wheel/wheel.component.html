@@ -1,0 +1,68 @@
+<div class="wheel">
+
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="300" [nzClosable]="false"
+    (nzOnCancel)="isVisible = false">
+    <div class="wheel-modal">
+      <div class="modal-content">
+        <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
+        <span>{{modalContent}}</span>
+      </div>
+      <div class="modal-footer">
+        <button nz-button nzType="default" (click)="isVisible = false" *ngIf="operationType !== 4">Cancel</button>
+        <button nz-button nzType="primary" (click)="confirmModal()">Confirm</button>
+      </div>
+    </div>
+  </nz-modal>
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>Marketing Activity</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Fortune Wheel</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="search">
+    <label for="rotationTableId">
+      <span>Activity：</span>
+      <input class="search-input" nz-input placeholder="Enter activity title or ID" [(ngModel)]="rotationTableId" id="rotationTableId" />
+    </label>
+    <button class="search-btn" nz-button nzType="primary" (click)="searchFn()">Search</button>
+  </div>
+
+  <div class="table">
+    <div class="table-top">
+      <span>Total：{{total}}</span>
+      <button nz-button nzType="primary" (click)="createFn()">Add Activity</button>
+    </div>
+    <nz-table [nzData]="lists" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" nzPageSize="10" [nzTotal]="total" [nzLoading]="loading" [nzBordered]="true"
+      [nzShowQuickJumper]="true" (nzPageIndexChange)="changePage($event)">
+      <thead>
+        <tr>
+          <th nzWidth="100px">ID</th>
+          <th nzWidth="120px">Activity Title</th>
+          <th>Activity Period</th>
+          <th>Warmup Period</th>
+          <th nzWidth="80px">Status</th>
+          <th nzWidth="300px">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of lists">
+          <td>{{item.rotaryTableId}}</td>
+          <td>{{item.title}}</td>
+          <td>{{item.startDate}} - {{item.endDate}} <br /> from {{item.startTime}} to {{item.endTime}} each day</td>
+          <td>Start Time：{{item.prepareStartDate}}<br /> End Time：{{item.prepareEndDate}}</td>
+					<td><span [ngClass]="{danger: item.status === 'DISABLED', success: item.status === 'ENABLED'}">{{item.status === 'ENABLED' ? 'Active' : 'Closed'}}</span></td> 
+					<!-- ENABLED, DISABLED enabled, disabled -->
+          <td class="operation">
+            <!-- 全部转盘活动都停止的情况下才会显示开启按钮 -->
+            <button nz-button nzType="primary" (click)="startFn(item.rotaryTableId)" *ngIf="isAllStop">Start</button>
+            <button nz-button nzType="danger" (click)="stopFn(item.rotaryTableId)" *ngIf="item.status === 'ENABLED'">Stop</button>
+            <button nz-button nzType="primary" (click)="editFn(item.rotaryTableId)">Edit</button>
+            <button nz-button class="btn-success" (click)="resultFn(item.rotaryTableId)">Participation Record</button>
+            <button nz-button nzType="danger" (click)="deleteFn(item.rotaryTableId)" *ngIf="item.status === 'DISABLED'">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+</div>
