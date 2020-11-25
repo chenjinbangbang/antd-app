@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
-import { ConfigService } from 'src/app/service/config.service';
 import { Observable } from 'rxjs';
+import { WheelService } from 'src/app/service/wheel.service';
 
 @Component({
   selector: 'app-wheel',
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./wheel.component.scss']
 })
 export class WheelComponent implements OnInit {
-  rotationTableId: string = ""; // 搜索关键词，活动id
+  searchVal: string = ""; // 搜索关键词，活动id或活动名称
   total: number = 0; // 总页数
   pageIndex: number = 1; // 当前页码
   loading: boolean = false; // 加载中
@@ -41,7 +41,7 @@ export class WheelComponent implements OnInit {
     private modal: NzModalService,
     private message: NzMessageService,
     private router: Router,
-    private configService: ConfigService
+    private wheelService: WheelService
   ) { }
 
   ngOnInit() {
@@ -64,10 +64,6 @@ export class WheelComponent implements OnInit {
     // }, (err) => {
     //   console.log(err);
     // });
-
-    // this.configService.request(url, 'GET', { id: 1 }).subscribe(res => {
-    //   console.log(res)
-    // })
 
     // const location = new Observable((observer) => {
     //   setTimeout(() => {
@@ -96,11 +92,10 @@ export class WheelComponent implements OnInit {
     this.loading = true;
     let params = {
       page: this.pageIndex,
-      rotationTableId: this.rotationTableId
+      searchVal: this.searchVal
     }
 
-    let url = '/api/setting/v1/rotary/table';
-    this.configService.request(url, 'GET', params).subscribe((res: any) => {
+    this.wheelService.getRotaryTable(params).subscribe(res => {
       console.log('get the rotary table page（获取大转盘列表）', res);
 
       this.isAllStop = res.data.every(item => {
@@ -124,8 +119,6 @@ export class WheelComponent implements OnInit {
 
   // 搜索活动
   searchFn() {
-    // console.log(this.rotationTableId);
-
     // get the rotary table page（获取大转盘列表）
     this.getLists()
   }
@@ -166,7 +159,7 @@ export class WheelComponent implements OnInit {
   resultFn(rotaryTableId) {
     console.log('抽奖结果', rotaryTableId);
 
-    this.router.navigate(['/wheel-result', { rotaryTableId }])
+    this.router.navigate(['/wheel/wheel-result', { rotaryTableId }])
   }
 
   // 删除活动
@@ -204,29 +197,25 @@ export class WheelComponent implements OnInit {
       status: this.operationType === 1 ? 'ENABLED' : 'DISABLED'
     }
 
-    let url = '/api/setting/v1/rotary/table/status';
-    this.configService.request(url, 'PUT', params).subscribe((res: any) => {
+    this.wheelService.tableStatus(params).subscribe(res => {
       console.log('update the rotary table status info（更改活动状态）', res);
 
       // get the rotary table page（获取大转盘列表）
       this.getLists()
 
       this.isVisible = false;
-      // this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
     })
   }
 
   // delete the rotary table（删除活动）
   deleteRotary() {
-    let url = `/api/setting/v1/rotary/table/${this.rotaryTableId}`;
-    this.configService.request(url, 'DELETE').subscribe((res: any) => {
+    this.wheelService.deleteRotary(this.rotaryTableId).subscribe((res: any) => {
       console.log('delete the rotary table（删除活动）', res);
 
       // get the rotary table page（获取大转盘列表）
       this.getLists()
 
       this.isVisible = false;
-      // this.message.success(`该活动已${this.operationTypeText[this.operationType]}`);
     })
   }
 

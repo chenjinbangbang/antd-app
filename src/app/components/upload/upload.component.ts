@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd';
-import { Observable } from 'rxjs';
-import { ConfigService } from 'src/app/service/config.service';
+import { CommonService } from 'src/app/service/common.service';
 
 @Component({
   selector: 'app-upload',
@@ -21,7 +20,7 @@ export class UploadComponent implements OnInit {
   @Output() changeFile = new EventEmitter();
 
   constructor(
-    private configService: ConfigService,
+    private commonService: CommonService,
     private message: NzMessageService
   ) { }
 
@@ -101,14 +100,9 @@ export class UploadComponent implements OnInit {
       formData.append('file', file);
       console.log('file', formData.get('file'));
 
-
-      let url = '/api/setting/v1/image/upload'
-      this.configService.request(url, 'POST', formData).subscribe((res: any) => {
+      this.commonService.imageUpload(formData).subscribe((res: any) => {
         console.log('上传文件成功', res)
 
-        // this.fileList.push(res.data.url);
-        // console.log(this.fileList)
-        // this.changeFile.emit(this.fileList);
         resolve(res.data.url)
       })
     });

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ConfigService } from 'src/app/service/config.service';
 import dateformat from 'dateformat'
+import { WheelService } from 'src/app/service/wheel.service';
 
 @Component({
   selector: 'app-wheel-result',
@@ -111,7 +111,7 @@ export class WheelResultComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private configService: ConfigService
+    private wheelService: WheelService
   ) { }
 
   ngOnInit() {
@@ -164,12 +164,7 @@ export class WheelResultComponent implements OnInit {
   exportFn() {
     let params = this.setParams();
 
-    let url = '/api/setting/v1/rotary/table/user/lottery/export';
-    this.configService.request(url, 'GET', params).subscribe((res: any) => {
-      console.log('export the rotary table user lottery list to excel（大转盘抽奖结果导出excel）', res);
-
-      
-    })
+    this.wheelService.lotteryExport(params);
   }
 
   // get the rotary table user lottery page（获取大转盘抽奖结果）
@@ -177,8 +172,7 @@ export class WheelResultComponent implements OnInit {
     this.loading = true;
     let params = this.setParams();
 
-    let url = '/api/setting/v1/rotary/table/user/lottery';
-    this.configService.request(url, 'GET', params).subscribe((res: any) => {
+    this.wheelService.getLottery(params).subscribe((res: any) => {
       console.log('get the rotary table user lottery page（获取大转盘抽奖结果）', res);
 
       this.lists = res.data;
@@ -230,12 +224,13 @@ export class WheelResultComponent implements OnInit {
 
       // Deliver the entity prizes（确认收货）
       let url = '/api/setting/v1/rotary/table/user/lottery/delivery';
-      this.configService.request(url, 'POST', params).subscribe((res: any) => {
+      this.wheelService.lotteryDelivery(params).subscribe((res: any) => {
         console.log('Deliver the entity prizes（确认收货）', res);
 
         // get the rotary table user lottery page（获取大转盘抽奖结果）
         this.getLists()
       })
+
     } else {
       for (const i in this.deliveredForm.controls) {
         this.deliveredForm.controls[i].markAsDirty();

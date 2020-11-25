@@ -25,12 +25,12 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 
 import { IndexComponent } from './pages/wheel/index/index.component';
-import { WheelComponent } from './pages/wheel/wheel/wheel.component';
-import { WheelResultComponent } from './pages/wheel/wheel-result/wheel-result.component';
-import { WheelSettingComponent } from './pages/wheel/wheel-setting/wheel-setting.component';
+// import { WheelComponent } from './pages/wheel/wheel/wheel.component';
+// import { WheelResultComponent } from './pages/wheel/wheel-result/wheel-result.component';
+// import { WheelSettingComponent } from './pages/wheel/wheel-setting/wheel-setting.component';
 
-import { ActivityComponent } from './pages/activity/activity.component';
-import { UploadComponent } from './components/upload/upload.component';
+// import { ActivityComponent } from './pages/activity/activity.component';
+// import { UploadComponent } from './components/upload/upload.component';
 
 
 @NgModule({
@@ -44,7 +44,7 @@ import { UploadComponent } from './components/upload/upload.component';
     // WheelSettingComponent,
     // StepComponent,
     
-    ActivityComponent,
+    // ActivityComponent,
     // UploadComponent,
   ],
   imports: [

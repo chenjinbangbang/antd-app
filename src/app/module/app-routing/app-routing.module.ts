@@ -9,9 +9,6 @@ import { IndexComponent } from 'src/app/pages/wheel/index/index.component';
 // import { WheelComponent } from 'src/app/pages/wheel/wheel/wheel.component';
 // import { WheelSettingComponent } from 'src/app/pages/wheel/wheel-setting/wheel-setting.component';
 // import { WheelResultComponent } from 'src/app/pages/wheel/wheel-result/wheel-result.component';
-
-
-
 // import { ActivityComponent } from 'src/app/pages/activity/activity.component';
 
 

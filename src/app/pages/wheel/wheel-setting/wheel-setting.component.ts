@@ -6,7 +6,8 @@ import { Observable, Observer } from 'rxjs';
 import dateformat from 'dateformat';
 
 import { FormControl, FormGroup, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors, AsyncValidator } from '@angular/forms';
-import { ConfigService } from 'src/app/service/config.service';
+import { WheelService } from 'src/app/service/wheel.service';
+import { CommonService } from 'src/app/service/common.service';
 
 // 异步验证器
 // class UniqureAlterEgoValidator implements AsyncValidator {
@@ -281,7 +282,8 @@ export class WheelSettingComponent implements OnInit {
     private message: NzMessageService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private configService: ConfigService
+    private wheelService: WheelService,
+    private commonService: CommonService
   ) {
     // route.params.subscribe(data => {
     //   console.log('---', data)
@@ -316,78 +318,42 @@ export class WheelSettingComponent implements OnInit {
         // 初始化奖品列表
         let prizes: any[] = [];
         for (let i = 0; i < 8; i++) {
-          // prizes.push({
-          //   allQuantity: '',
-          //   amount: '',
-          //   description: "",
-          //   entityImageUrls: [],
-          //   everydayQuantity: '',
-          //   imageUrl: "",
-          //   name: "",
-          //   type: null,
-          //   winnerNumbers: "",
-          // })
           prizes.push({
-            allQuantity: 100,
-            amount: 30,
-            description: "奖品描述奖品描述",
+            allQuantity: '',
+            amount: '',
+            description: "",
             entityImageUrls: [],
-            everydayQuantity: 20,
-            imageUrl: "https://d2fcenhuvgkdg9.cloudfront.net/default/71b18853-1fbc-4deb-99ba-6a981bb2f6ee.jpg",
-            name: "华为meta40",
-            type: "ENTITY",
-            winnerNumbers: `10${i};20${i}`,
+            everydayQuantity: '',
+            imageUrl: "",
+            name: "",
+            type: null,
+            winnerNumbers: "",
           })
+          // prizes.push({
+          //   allQuantity: 100,
+          //   amount: 30,
+          //   description: "奖品描述奖品描述",
+          //   entityImageUrls: [],
+          //   everydayQuantity: 20,
+          //   imageUrl: "https://d2fcenhuvgkdg9.cloudfront.net/default/71b18853-1fbc-4deb-99ba-6a981bb2f6ee.jpg",
+          //   name: "华为meta40",
+          //   type: "ENTITY",
+          //   winnerNumbers: `10${i};20${i}`,
+          // })
         }
         this.prizes = prizes;
       }
     })
 
-    // this.configService.request('/api/profile', 'GET').subscribe((res: any) => {
-    //   console.log('profile：', res);
-
-    //   let { region_name } = res.User;
-
-    // 参数：country_id
-    // this.configService.request('/api/region-list', 'GET').subscribe((res1: any) => {
-    //   console.log('region：', res1);
-
-    //   let regionList = res1;
-    //   for(let item of regionList) {
-    //     if(item.region_name = region_name) {
-
-    //       let region_code = item.code;
-    //     }
-
-    //   }
-    // })
-    // })
-
     // 获取地区列表
-    // this.configService.request('/api/region-list', 'GET', { country_id: '173' }).subscribe((res: any) => {
-    //   console.log('获取地区列表：', res);
-    //   this.regionList = res;
-    //   this.region_code = res[0].code;
+    this.commonService.getRegionList({ country_id: '173' }).subscribe((res: any) => {
+      console.log('获取地区列表：', res);
+      this.regionList = res;
+      this.region_code = res[0].code;
 
-    //   // 获取省份列表，并且默认选中第一个省份
-    //   this.getProvinceList(this.region_code);
-    // })
-
-
-    // 获取省份列表。参数：region_code
-    // this.configService.request('/api/province-list', 'GET').subscribe((res2: any) => {
-    //   console.log('province：', res2);
-    // })
-
-
-    // 获取城市列表。参数：province_code
-    // this.configService.request('/api/city-municipality-list', 'GET').subscribe((res: any) => {
-    //   console.log('获取城市列表', res);
-
-    //   localStorage.setItem('citys', res.data);
-    // })
-
-    // this.originForm = JSON.stringify(this.form.value);
+      // 获取省份列表，并且默认选中第一个省份
+      this.getProvinceList(this.region_code);
+    })
   }
 
   // get the rotary table info details（获取某个活动详情）
@@ -395,8 +361,7 @@ export class WheelSettingComponent implements OnInit {
     this.loading = true;
     let { rotaryTableId } = this.form.value
 
-    let url = `/api/setting/v1/rotary/table/${rotaryTableId}`;
-    this.configService.request(url, 'GET').subscribe((res: any) => {
+    this.wheelService.rotaryTableDetail(rotaryTableId).subscribe((res: any) => {
       console.log('get the rotary table info details（获取某个活动详情）', res);
 
       // 处理图片
@@ -433,20 +398,20 @@ export class WheelSettingComponent implements OnInit {
   // 获取省份列表，并且默认选中第一个省份
   getProvinceList(region_code) {
     // 获取省份列表
-    this.configService.request('/api/province-list', 'GET', { region_code }).subscribe((res: any) => {
+    this.commonService.getProvinceList({ region_code }).subscribe((res: any) => {
       console.log('获取省份列表：', res);
       this.provinceList = res;
       this.province_code = res[0].province_code;
 
       // 获取城市列表
-      this.getCityList(this.province_code);
+      this.getCityMunicipalityList(this.province_code);
     })
   }
 
   // 获取城市列表
-  getCityList(province_code) {
+  getCityMunicipalityList(province_code) {
     // 获取城市列表
-    this.configService.request('/api/city-municipality-list', 'GET', { province_code }).subscribe((res: any) => {
+    this.commonService.getCityMunicipalityList({ province_code }).subscribe((res: any) => {
       console.log('获取城市列表', res);
       this.cityList = res;
     })
@@ -465,7 +430,7 @@ export class WheelSettingComponent implements OnInit {
     console.log('选择省份', val);
 
     // 获取城市列表
-    this.getCityList(val);
+    this.getCityMunicipalityList(val);
   }
 
   // 选中城市
@@ -495,16 +460,14 @@ export class WheelSettingComponent implements OnInit {
   // 设置城市
   settingCitys() {
     // 获取地区列表
-    this.configService.request('/api/region-list', 'GET', { country_id: '173' }).subscribe((res: any) => {
-      console.log('获取地区列表：', res);
-      this.regionList = res;
-      this.region_code = res[0].code;
+    // this.commonService.getRegionList({ country_id: '173' }).subscribe((res: any) => {
+    //   console.log('获取地区列表：', res);
+    //   this.regionList = res;
+    //   this.region_code = res[0].code;
 
-      // 获取省份列表，并且默认选中第一个省份
-      this.getProvinceList(this.region_code);
-
-      
-    })
+    //   // 获取省份列表，并且默认选中第一个省份
+    //   this.getProvinceList(this.region_code);
+    // })
 
     
     this.selectCityList = JSON.parse(JSON.stringify(this.citys))
@@ -656,9 +619,7 @@ export class WheelSettingComponent implements OnInit {
 
       // 需要23个参数
       // save the rotary table info（添加/编辑大转盘活动）
-      let url = '/api/setting/v1/rotary/table'
-      this.configService.request(url, 'POST', form).subscribe((res: any) => {
-
+      this.wheelService.rotaryTable(form).subscribe((res: any) => {
         this.message.success('Successfully Saved');
         history.go(-1);
       })
