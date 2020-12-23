@@ -17,10 +17,10 @@
   </nz-modal>
 
   <nz-modal [(nzVisible)]="deliveredVisible" nzTitle="" [nzFooter]="null" [nzWidth]="1000" [nzClosable]="false"
-    (nzOnCancel)="isVisible = false">
-    <div class="wheel-modal">
-      <div class="wheel-title">Delivery Confirm</div>
-      <div class="wheel-note">If you confirm, the prize status will be modified to "Delivered"</div>
+    (nzOnCancel)="deliveredVisible = false">
+    <div class="modal">
+      <div class="modal-title">Delivery Confirm</div>
+      <div class="modal-note">If you confirm, the prize status will be modified to "Delivered"</div>
       <div class="wheel-form">
         <form nz-form nzLayout="vertical" [formGroup]="deliveredForm" (ngSubmit)="confirmDelivered()">
           <nz-form-item>

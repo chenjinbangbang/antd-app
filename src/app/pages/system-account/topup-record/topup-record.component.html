@@ -1,0 +1,178 @@
+<div class="topup-record">
+
+  <!-- Approve确认弹框 -->
+  <nz-modal [(nzVisible)]="approveIsVisible" nzTitle="" [nzFooter]="null" [nzWidth]="600" [nzClosable]="false"
+    (nzOnCancel)="approveIsVisible = false">
+    <div class="modal">
+
+      <div class="modal-title">Approval Confirm</div>
+
+      <div class="modal-form">
+        <form nz-form nzLayout="horizontal" (ngSubmit)="submitApproveForm()">
+
+          <div class="modal-item">
+            <span class="account">{{topupInfo.amount}}</span>
+            <span>Pesos</span>
+          </div>
+
+          <div class="modal-item">{{accountNameData[topupInfo.accountName]}}</div>
+
+          <nz-form-item nz-row nzFlex="true">
+            <nz-form-label nzSpan="9">Bank Deposit Receipt</nz-form-label>
+            <div nz-col nzSpan="15">
+              <nz-form-control>{{topupInfo.bankDepositReceipt || '--'}}</nz-form-control>
+              <app-upload [fileList]="[topupInfo.uploadReceiptUrl]" [disabled]="true"
+                *ngIf="topupInfo.uploadReceiptUrl"></app-upload>
+            </div>
+          </nz-form-item>
+
+          <nz-form-item class="form-footer">
+            <nz-form-control>
+              <button nz-button nzType="default" (click)="approveCancel($event)">Cancel</button>
+              <button nz-button nzType="primary" style="margin-left: 20px;">Confirm</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+  </nz-modal>
+
+  <!-- Reject确认弹框 -->
+  <nz-modal [(nzVisible)]="rejectIsVisible" nzTitle="" [nzFooter]="null" [nzWidth]="600" [nzClosable]="false"
+    (nzOnCancel)="rejectIsVisible = false">
+    <div class="modal">
+
+      <div class="modal-title">Reject Confirm</div>
+
+      <div class="modal-form">
+        <form nz-form nzLayout="vertical" [formGroup]="rejectForm" (ngSubmit)="submitRejectForm()">
+
+          <nz-form-item>
+            <nz-form-label>Reject topup applicaton, enter the relevant reason</nz-form-label>
+
+            <nz-form-control nzHasFeedback nzErrorTip="Enter the reason">
+              <textarea nz-input formControlName="remark" id="remark" maxlength="120" placeholder="Enter the remark"
+                [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+            </nz-form-control>
+            <div class="text-length">{{rejectForm.value.remark.length}}/120</div>
+          </nz-form-item>
+
+          <nz-form-item class="form-footer">
+            <nz-form-control>
+              <button nz-button nzType="default" (click)="rejectCancel($event)">Cancel</button>
+              <button nz-button nzType="primary" style="margin-left: 20px;">Confirm</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+  </nz-modal>
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>System Account</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Topup Record</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="search">
+
+    <form nz-form nzLayout="inline" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+      <nz-form-item>
+        <nz-form-label>Record ID</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="id" id="id" placeholder="Enter record ID" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Account Name</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="accountName">
+            <nz-option *ngFor="let item of accountNameList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Status</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="status">
+            <nz-option *ngFor="let item of statusList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>DateTime</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="date" [nzShowTime]="true"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary">Search</button>
+          <button class="reset" nz-button nzType="default" (click)="resetForm($event)">Reset</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+
+  <div class="table">
+    <nz-table [nzData]="lists" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" nzPageSize="10" [nzTotal]="total"
+      [nzLoading]="loading" [nzBordered]="true" [nzShowQuickJumper]="true" (nzPageIndexChange)="changePage($event)">
+      <thead>
+        <tr>
+          <th>Account Name</th>
+          <th>Serial No</th>
+          <th>Amount</th>
+          <th>status</th>
+          <th>Datetime</th>
+          <th>latest-operator</th>
+          <th width="200px">Bank Receipt</th>
+          <th width="200px">Remark</th>
+          <th nzWidth="250px">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of lists; let i=index">
+          <td>{{accountNameData[item.accountName]}}</td>
+          <td>
+            <a routerLink="/system-account/topup-record-detail" [queryParams]="{id: item.id}">{{item.id}}</a>
+          </td>
+          <td [ngClass]="{ success: item.status === 'SUCCESS', danger: item.status !== 'SUCCESS' }">{{item.amount}}</td>
+          <td [ngClass]="statusColor[item.status]">{{statusData[item.status]}}</td>
+          <td>{{item.updatedTime}}</td>
+          <td>{{item.updatedBy}}</td>
+          <td>
+            <img *ngIf="item.uploadReceiptUrl" [src]="item.uploadReceiptUrl" alt class="table-img" />
+            <span>{{item.bankDepositReceipt}}</span>
+          </td>
+          <td>
+            <span nz-tooltip [nzTooltipTitle]='remarkTemplate'
+              nzTooltipPlacement="left">{{item.remarks[0].remark | split:60}}</span>
+            <ng-template #remarkTemplate>
+              <div class="remark-list">
+                <ul>
+                  <li *ngFor="let item1 of item.remarks; let i=index">
+                    <div class="remark-top">
+                      <span>{{item1.time}}</span>
+                      <span>{{item1.username}}</span>
+                      <span>{{remarkData[item1.status]}}</span>
+                    </div>
+                    <div class="remark-content">{{item1.remark}}</div>
+                  </li>
+                </ul>
+              </div>
+            </ng-template>
+          </td>
+          <td class="operation">
+            <button nz-button nzType="primary" (click)="operationFn(i, 1)">Approve</button>
+            <button nz-button nzType="danger" (click)="operationFn(i, 2)">Reject</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+
+  </div>

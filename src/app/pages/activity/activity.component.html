@@ -2,7 +2,7 @@
 
   <nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="300" [nzClosable]="false"
     (nzOnCancel)="isVisible = false">
-    <div class="wheel-modal">
+    <div class="modal">
       <div class="modal-content">
         <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
         <span>确定删除吗？</span>
@@ -16,11 +16,11 @@
 
   <nz-modal [(nzVisible)]="formVisible" nzTitle="" [nzFooter]="null" [nzWidth]="1000" [nzClosable]="false"
     (nzOnCancel)="isVisible = false">
-    <div class="wheel-modal">
+    <div class="modal">
 
-      <div class="wheel-title">{{operation === 3 ? '查看' : '添加/编辑'}}</div>
+      <div class="modal-title">{{operation === 3 ? '查看' : '添加/编辑'}}</div>
 
-      <div class="wheel-form">
+      <div class="modal-form">
         <form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
           <nz-form-item>
             <nz-form-label nzRequired nzFor="name">任务名称</nz-form-label>

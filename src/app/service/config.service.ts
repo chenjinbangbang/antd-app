@@ -28,7 +28,7 @@ export class ConfigService {
         // })
       }
 
-      if(['/api/profile', '/api/region-list', '/api/province-list', '/api/city-municipality-list'].includes(url)) {
+      if(['/profile', '/region-list', '/province-list', '/city-municipality-list'].includes(url)) {
         url = 'https://devbackendapi.fortunepay.com.ph' + url;
       } else {
         url = 'https://devraffleserviceapi.fortunepay.com.ph' + url;
@@ -36,7 +36,7 @@ export class ConfigService {
       
 
       // 导出excel
-      if (url.includes('/api/setting/v1/rotary/table/user/lottery/export')) {
+      if (url.includes('/setting/v1/rotary/table/user/lottery/export')) {
         httpOptions.headers = httpOptions.headers.set('responseType', 'text');
         // httpOptions.headers = httpOptions.headers.set('Content-Type', 'application/json');
       }
@@ -49,7 +49,7 @@ export class ConfigService {
             // console.log('响应数据', res);
 
             // 导出excel
-            if (url.includes('/api/setting/v1/rotary/table/user/lottery/export')) {
+            if (url.includes('/setting/v1/rotary/table/user/lottery/export')) {
               let disposition = res.headers['content-disposition'] || res.headers['Content-Disposition'];
               if(disposition) {
                 let filename = disposition ? decodeURIComponent(disposition.split(':')[1]) : new Date().getTime() + '.xls';
@@ -97,7 +97,7 @@ export class ConfigService {
         case 'POST':
 
           // 上传文件
-          // if (url.includes('/api/setting/v1/image/upload')) {
+          // if (url.includes('/setting/v1/image/upload')) {
           //   httpOptions.headers = httpOptions.headers.set('Content-Type', 'multipart/form-data');
 
           //   console.log('文件', params)

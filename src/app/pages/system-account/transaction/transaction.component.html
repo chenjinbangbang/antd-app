@@ -1,0 +1,102 @@
+<div class="transaction">
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>System Account</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Transaction</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="search">
+
+    <form nz-form nzLayout="inline" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+      <nz-form-item>
+        <nz-form-label>Transaction ID</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="id" id="id" placeholder="Enter transaction ID" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Reference No</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="referenceNo" id="referenceNo" placeholder="Enter reference No" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Account Name</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="accountName">
+            <nz-option *ngFor="let item of accountNameList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Transaction Type</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="transactionType">
+            <nz-option *ngFor="let item of transactionTypeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Sub-transaction Type</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="subTransactionType">
+            <nz-option *ngFor="let item of subTransactionTypeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item>
+        <nz-form-label>DateTime</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="date" [nzShowTime]="true"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary">Search</button>
+          <button class="reset" nz-button nzType="default" (click)="resetForm($event)">Reset</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+
+  <div class="table">
+    <nz-table [nzData]="lists" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" nzPageSize="10" [nzTotal]="total" [nzLoading]="loading"
+      [nzBordered]="true" [nzShowQuickJumper]="true" (nzPageIndexChange)="changePage($event)">
+      <thead>
+        <tr>
+          <th>Account Name</th>
+          <th>Transaction ID</th>
+          <th>Transaction Type</th>
+          <th>Sub-transaction Type</th>
+          <th>Amount</th>
+          <th>balance</th>
+          <th>Datetime</th>
+          <th>Reference No</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of lists; let i=index">
+          <td>{{item.accountName}}</td>
+          <td>{{item.id}}</td>
+          <td>{{transactionTypeData[item.transactionType]}}</td>
+          <td>{{subTransactionTypeData[item.subTransactionType]}}</td>
+          <td>{{item.amount}}</td>
+          <td>{{item.balance}}</td>
+          <td>{{item.createdTime}}</td>
+          <td>{{item.referenceNo}}</td>
+          <td>{{item.description}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  
+</div>

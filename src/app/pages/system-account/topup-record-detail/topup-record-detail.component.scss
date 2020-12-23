@@ -1,0 +1,68 @@
+.topup-record-detail {
+  .topup-info{
+    .topup-title {
+      font-size: 22px;
+      padding: 20px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    ul{
+      display: flex;
+      flex-wrap: wrap;
+      li{
+        width: 33.3%;
+        margin-top: 20px;
+        span{
+          &:nth-child(1){
+            color: #666;
+          }
+          &:nth-child(2){}
+        }
+      }
+    }
+  }
+
+  .topup-remark{
+    margin-top: 40px;
+    .remark-title {
+      font-size: 18px;
+      margin: 20px 0;
+      padding-left: 20px;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 10%;
+        width: 2px;
+        height: 80%;
+        background-color: #1890ff;
+      }
+    }
+    ul{
+      border-top: 1px solid #ddd;
+      li{
+        padding: 20px 0;
+        border-bottom: 1px solid #ddd;
+        .remark-top{
+          display: flex;
+          color: #666;
+          span{
+            &:nth-child(1){
+              
+            }
+            &:nth-child(2){
+              margin-left: 40px;
+            }
+            &:nth-child(3){
+              margin-left: 40px;
+            }
+          }
+        }
+        .remark-content{
+          margin-top: 20px;
+        }
+      }
+    }
+  }
+}

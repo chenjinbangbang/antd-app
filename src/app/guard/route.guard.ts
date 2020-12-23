@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanDeactivate } from '@angular/router';
 import { Observable } from 'rxjs';
-import { WheelSettingComponent } from '../pages/wheel-setting/wheel-setting.component';
+import { WheelSettingComponent } from '../pages/wheel/wheel-setting/wheel-setting.component';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+
 
 @Injectable({
   providedIn: 'root'

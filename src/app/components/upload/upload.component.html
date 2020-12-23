@@ -1,3 +1,4 @@
+<!-- 可编辑时，显示。不可编辑时并且没有图片时，不显示 -->
 <div class="upload-component">
 
   <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
@@ -9,19 +10,18 @@
 	
 	<!-- <ng-template #indicatorTemplate><i nz-icon nzType="loading" style="font-size: 24px;"></i> </ng-template> -->
 	
-
   <div class="upload-img">
     <div class="img-list" *ngFor="let item of fileList; let i=index">
       <img [src]="item" alt />
       <div class="item-bg">
         <i nz-icon nzType="eye" nzTheme="outline" (click)="previewImg(item)"></i>
-        <i nz-icon nzType="delete" nzTheme="outline" (click)="deleteImg(item)"></i>
+        <i nz-icon nzType="delete" nzTheme="outline" (click)="deleteImg(item)" *ngIf="!disabled"></i>
       </div>
     </div>
   </div>
-  <div class="upload-icon" *ngIf="fileList.length < length">
+  <div class="upload-icon" *ngIf="fileList.length < length && !disabled" (click)="inputFn()">
 		<nz-spin nzSimple nzTip="Uploading..." [nzSpinning]="isSpinning"></nz-spin>
 		<i nz-icon nzType="plus" class="icon-plus" *ngIf="!isSpinning"></i>
-		<input type="file" class="upload-icon-file" [multiple]="multiple" (change)="addImg($event)" />
+		<input type="file" class="upload-icon-file" [multiple]="multiple" #inputUpload (change)="addImg($event)" />
   </div>
 </div>

@@ -3,21 +3,22 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AntdModule } from 'src/app/module/antd/antd.module';
+import { ComponentModule } from 'src/app/module/component/component.module';
+
+import { ApiService } from 'src/app/service/api.service';
+import { CommonService } from 'src/app/service/common.service';
+import { WheelService } from 'src/app/service/wheel.service';
 
 import { WheelComponent } from 'src/app/pages/wheel/wheel/wheel.component';
 import { WheelSettingComponent } from 'src/app/pages/wheel/wheel-setting/wheel-setting.component';
 import { WheelResultComponent } from 'src/app/pages/wheel/wheel-result/wheel-result.component';
-import { UploadComponent } from 'src/app/components/upload/upload.component';
-
-import { ApiService } from 'src/app/service/api.service';
-import { WheelService } from 'src/app/service/wheel.service';
-import { CommonService } from 'src/app/service/common.service';
-
+import { CandyListComponent } from 'src/app/pages/wheel/candy-list/candy-list.component';
 
 const routes: Routes = [
   { path: '', component: WheelComponent },
   { path: 'wheel-setting', component: WheelSettingComponent },
   { path: 'wheel-result', component: WheelResultComponent },
+  { path: 'candy-list', component: CandyListComponent },
 ]
 
 @NgModule({
@@ -25,7 +26,7 @@ const routes: Routes = [
     WheelComponent,
     WheelSettingComponent,
     WheelResultComponent,
-    UploadComponent
+    CandyListComponent
   ],
   imports: [
     CommonModule,
@@ -33,12 +34,13 @@ const routes: Routes = [
 
     FormsModule,
     ReactiveFormsModule,
-    AntdModule
+    AntdModule,
+    ComponentModule
   ],
   providers: [
     ApiService,
-    WheelService,
-    CommonService
+    CommonService,
+    WheelService
   ]
 })
 export class WheelModule { }

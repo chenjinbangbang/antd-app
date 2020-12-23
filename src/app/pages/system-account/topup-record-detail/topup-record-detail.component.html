@@ -1,0 +1,38 @@
+<div class="topup-record-detail">
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>System Account</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Topup Record Detail</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="topup-info">
+    <div class="topup-title">Topup Detail</div>
+    <ul>
+      <li><span>Account ID：</span><span>{{detail.id}}</span></li>
+      <li><span>Account Name：</span><span>{{detail.accountName}}</span></li>
+      <li><span>Serial No：</span><span>{{detail.id}}</span></li>
+      <li><span>Amount：</span><span>{{detail.amount}}</span></li>
+      <li><span>Datetime：</span><span>{{detail.updatedTime}}</span></li>
+      <li><span>Status：</span><span [ngClass]="statusColor[detail.status]">{{statusData[detail.status]}}</span></li>
+      <li><span>Bank Deposit Receipt：</span><span>{{detail.bankDepositReceipt}}</span></li>
+      <li *ngIf="detail.uploadReceiptUrl">
+        <app-upload [fileList]="[detail.uploadReceiptUrl]" [disabled]="true"></app-upload>
+      </li>
+    </ul>
+  </div>
+
+  <div class="topup-remark">
+    <div class="remark-title">Operation Log</div>
+    <ul>
+      <li *ngFor="let item1 of detail.remarks; let i=index">
+        <div class="remark-top">
+          <span>{{item1.time}}</span>
+          <span>{{item1.username}}</span>
+          <span>{{remarkData[item1.status]}}</span>
+        </div>
+        <div class="remark-content" *ngIf="item1.remark">{{item1.remark}}</div>
+      </li>
+    </ul>
+  </div>
+  
+</div>

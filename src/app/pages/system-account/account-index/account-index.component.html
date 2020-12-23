@@ -1,0 +1,11 @@
+<div class="account-content">
+  <ul nz-menu nzMode="inline">
+    <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true"><a routerLink="/system-account">Account Info</a></li>
+    <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true"><a routerLink="/system-account/transaction">Transaction</a></li>
+    <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true"><a routerLink="/system-account/topup-record">Topup Record</a></li>
+  </ul>
+
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

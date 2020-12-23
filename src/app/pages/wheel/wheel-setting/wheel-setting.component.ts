@@ -93,10 +93,11 @@ export class WheelSettingComponent implements OnInit {
   //   }, 1000);
   // });
 
+  rotaryTableId = ''; // 活动id
   // 表单数据
   form = this.fb.group({
-    rotaryTableId: ['', [Validators.required]],
-    title: ['', [Validators.required, Validators.maxLength(10)]],
+    // rotaryTableId: [''],
+    title: ['', [Validators.required, Validators.maxLength(128)]],
     description: ['', [Validators.required, Validators.maxLength(200)]],
     startDate: [null, [Validators.required]],
     endDate: [null, [Validators.required]],
@@ -152,7 +153,6 @@ export class WheelSettingComponent implements OnInit {
   // }
   prizes: any[] = [{}, {}, {}, {}, {}, {}, {}, {}]; // 奖品列表
   prizeIndex: number = 0; // 选中奖品索引
-  isEdit: boolean = false; // 是否是编辑活动页面
   backgroundFileList: any[] = []; // 背景模板底图
   rotaryTableFileList: any[] = []; // 转盘模板底图
   originForm: string = ''; // 表单字符串，用于判断表单是否修改过
@@ -256,9 +256,9 @@ export class WheelSettingComponent implements OnInit {
   }]
   goodsTypeData: object = {
     'CASH': "Cash",
-    'ENTITY': "Candy",
-    'CANDY': "糖果",
-    'NOTHING': "Nothing",
+    'ENTITY': "Entity",
+    'CANDY': "Candy",
+    'NOTHING': "Nothing"
   }
 
   // 奖品表格数据
@@ -285,32 +285,14 @@ export class WheelSettingComponent implements OnInit {
     private wheelService: WheelService,
     private commonService: CommonService
   ) {
-    // route.params.subscribe(data => {
-    //   console.log('---', data)
-    // })
   }
 
   ngOnInit() {
-    // console.log(this.form.value);
-
-    // console.log(this.route)
-    // console.log("获取动态路由", this.route.params); // 获取动态路由
-    // console.log("获取get传值", this.route.queryParams); // 获取get传值
-    // this.route.queryParams.subscribe((data) => {  // 获取get传值
-    //   console.log("获取get传值", data);
-    // });
-
-    // let id: Observable<string> = this.route.params.pipe(map(p => p.id));
-    // console.log(id)
-
-    this.route.params.subscribe(data => {
-      console.log(data);
+    this.route.queryParams.subscribe(data => {
+      console.log('queryParams', data);
       // 若路由存在rotaryTableId，则是编辑活动页面，否则是添加活动
       if (data.rotaryTableId) {
-        this.form.patchValue({
-          rotaryTableId: data.rotaryTableId,
-          isEdit: true
-        })
+        this.rotaryTableId = data.rotaryTableId;
 
         // get the rotary table info details（获取某个活动详情）
         this.getDetail();
@@ -348,8 +330,8 @@ export class WheelSettingComponent implements OnInit {
     // 获取地区列表
     this.commonService.getRegionList({ country_id: '173' }).subscribe((res: any) => {
       console.log('获取地区列表：', res);
-      this.regionList = res;
-      this.region_code = res[0].code;
+      this.regionList = res.data;
+      this.region_code = res.data[0].code;
 
       // 获取省份列表，并且默认选中第一个省份
       this.getProvinceList(this.region_code);
@@ -359,24 +341,24 @@ export class WheelSettingComponent implements OnInit {
   // get the rotary table info details（获取某个活动详情）
   getDetail() {
     this.loading = true;
-    let { rotaryTableId } = this.form.value
+    // let { rotaryTableId } = this.form.value
 
-    this.wheelService.rotaryTableDetail(rotaryTableId).subscribe((res: any) => {
+    this.wheelService.rotaryTableDetail(this.rotaryTableId).subscribe((res: any) => {
       console.log('get the rotary table info details（获取某个活动详情）', res);
 
       // 处理图片
-      this.backgroundFileList = [res.backgroundImageUrl]
-      this.rotaryTableFileList = [res.rotaryTableImageUrl]
+      this.backgroundFileList = [res.data.backgroundImageUrl]
+      this.rotaryTableFileList = [res.data.rotaryTableImageUrl]
 
       // 处理奖品表格
       // this.prizeInfos = res.prizeInfos
-      this.prizes = res.prizeInfos
-      res.startTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.startTime);
-      res.endTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.endTime);
-      delete res.prizeInfos
+      this.prizes = res.data.prizeInfos
+      res.data.startTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.data.startTime);
+      res.data.endTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.data.endTime);
+      delete res.data.prizeInfos
 
-      this.form.patchValue(res);
-      this.citys = res.citys;
+      this.form.patchValue(res.data);
+      this.citys = res.data.citys;
 
       console.log('城市', this.citys);
 
@@ -400,8 +382,8 @@ export class WheelSettingComponent implements OnInit {
     // 获取省份列表
     this.commonService.getProvinceList({ region_code }).subscribe((res: any) => {
       console.log('获取省份列表：', res);
-      this.provinceList = res;
-      this.province_code = res[0].province_code;
+      this.provinceList = res.data;
+      this.province_code = res.data[0].province_code;
 
       // 获取城市列表
       this.getCityMunicipalityList(this.province_code);
@@ -413,7 +395,7 @@ export class WheelSettingComponent implements OnInit {
     // 获取城市列表
     this.commonService.getCityMunicipalityList({ province_code }).subscribe((res: any) => {
       console.log('获取城市列表', res);
-      this.cityList = res;
+      this.cityList = res.data;
     })
   }
 
@@ -613,6 +595,10 @@ export class WheelSettingComponent implements OnInit {
         cityMunicipalityIds
       }
 
+      if(this.rotaryTableId) {
+        form.rotaryTableId = this.rotaryTableId
+      }
+
       // delete form.citys;
 
       console.log('提交表单', form);
@@ -693,7 +679,7 @@ export class WheelSettingComponent implements OnInit {
       let params = this.prizeForm.value
 
       // 新增则不传id
-      if (!this.isEdit) {
+      if (!this.rotaryTableId) {
         delete params.id;
       }
 

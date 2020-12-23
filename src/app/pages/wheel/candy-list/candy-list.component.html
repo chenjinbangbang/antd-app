@@ -1,0 +1,94 @@
+<div class="candy-list">
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>Candy Record</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="search">
+
+    <form nz-form nzLayout="inline" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+      <nz-form-item>
+        <nz-form-label>User ID</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="userId" id="userId" placeholder="Enter user ID" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>User</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="username" id="username" placeholder="Enter user nickname" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Event</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="type">
+            <nz-option *ngFor="let item of typeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- <nz-form-item>
+        <nz-form-label>Candy ID</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="relationId" id="relationId" placeholder="Enter candy ID" />
+        </nz-form-control>
+      </nz-form-item> -->
+
+      <nz-form-item>
+        <nz-form-label>Event ID</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="relationId" placeholder="Input Event ID" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Date</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="date" [nzShowTime]="true"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary">Search</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+
+  <div class="table">
+    <div class="table-top">
+      <span>Total：{{total}}</span>
+    </div>
+    <nz-table [nzData]="lists" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" nzPageSize="10" [nzTotal]="total" [nzLoading]="loading"
+      [nzBordered]="true" [nzShowQuickJumper]="true" (nzPageIndexChange)="changePage($event)">
+      <thead>
+        <tr>
+          <th>Candy ID</th>
+          <th>User ID</th>
+          <th>User Nickname</th>
+          <th>Date</th>
+          <th>Event</th>
+          <th>Event ID</th>
+          <th>Candies</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of lists; let i=index">
+          <td>{{item.id}}</td>
+          <td>{{item.userId}}</td>
+          <td>{{item.username}}</td>
+          <td>{{item.createdTime}}</td>
+          <td>{{item.type}}</td>
+          <td>{{item.relationId}}</td>
+          <td>{{item.amount}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+</div>

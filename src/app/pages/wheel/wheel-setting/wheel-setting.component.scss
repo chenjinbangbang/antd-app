@@ -96,24 +96,14 @@
 
       .form-item-note {
         margin-top: 10px;
-        color: #666;
       }
     }
   }
 }
 
-.wheel-modal {
-  .wheel-title {
-    text-align: center;
-    font-size: 18px;
-  }
-
-  .wheel-form {
-    margin-top: 20px;
-  }
-
+.modal {
   // 选择城市样式
-  .city-modal {
+  .city-modal {modal
     .choose-city {
       margin-top: 20px;
       display: flex;

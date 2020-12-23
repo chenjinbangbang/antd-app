@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { CommonService } from 'src/app/service/common.service';
 
@@ -15,24 +15,35 @@ export class UploadComponent implements OnInit {
   @Input() length: number = 1; // 支持上传的图片长度
   @Input() fileList: any[] = []; // 图片数据，如["xxx/1.png"]
   @Input() multiple: boolean = false; // 是否支持多选
+  @Input() disabled: boolean = false; // 是否不可编辑
   // @Input() changeFile; // 改变图片数据，父组件的方法
+
+  @ViewChild('inputUpload', null) inputUpload: ElementRef;
 
   @Output() changeFile = new EventEmitter();
 
   constructor(
     private commonService: CommonService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    // private renderer: Renderer2
   ) { }
 
   ngOnInit() {
     // console.log(this.length, this.fileList)
   }
 
+  inputFn(){
+    console.log(this.inputUpload.nativeElement);
+    // 扩展此基类以实现自定义渲染器
+    // this.renderer.setStyle(this.inputUpload.nativeElement, 'border', '1px solid #f00');
+    this.inputUpload.nativeElement.click();
+  }
+
   // 添加图片
   async addImg(e) {
     console.log('添加图片', e);
     console.log(e.target.files)
-    let types = ['image/jpeg','image/PNG'] // 支持上传的格式
+    let types = ['image/jpeg','image/png'] // 支持上传的格式
 
     let files = e.target.files;
 
@@ -46,9 +57,6 @@ export class UploadComponent implements OnInit {
     // 是否多选
     if (this.multiple) {
       // let files = e.target.files;
-
-
-
       let promises: any[] = [];
       for (let file of files) {
 
@@ -103,7 +111,7 @@ export class UploadComponent implements OnInit {
       this.commonService.imageUpload(formData).subscribe((res: any) => {
         console.log('上传文件成功', res)
 
-        resolve(res.data.url)
+        resolve(res.url)
       })
     });
   }

@@ -115,7 +115,7 @@ export class WheelResultComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(data => {
+    this.route.queryParams.subscribe(data => {
       console.log(data);
 
       // 若路由存在rotaryTableId，则说明需要筛选rotaryTableId
@@ -164,7 +164,7 @@ export class WheelResultComponent implements OnInit {
   exportFn() {
     let params = this.setParams();
 
-    this.wheelService.lotteryExport(params);
+    this.wheelService.lotteryExport(params).subscribe();
   }
 
   // get the rotary table user lottery page（获取大转盘抽奖结果）
@@ -175,8 +175,8 @@ export class WheelResultComponent implements OnInit {
     this.wheelService.getLottery(params).subscribe((res: any) => {
       console.log('get the rotary table user lottery page（获取大转盘抽奖结果）', res);
 
-      this.lists = res.data;
-      this.total = res.total_counts;
+      this.lists = res.data.data;
+      this.total = res.data.total_counts;
       this.loading = false;
     })
   }
@@ -223,7 +223,6 @@ export class WheelResultComponent implements OnInit {
       };
 
       // Deliver the entity prizes（确认收货）
-      let url = '/api/setting/v1/rotary/table/user/lottery/delivery';
       this.wheelService.lotteryDelivery(params).subscribe((res: any) => {
         console.log('Deliver the entity prizes（确认收货）', res);
 

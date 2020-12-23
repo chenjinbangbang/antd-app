@@ -1,0 +1,76 @@
+.topup-record {
+  .search {
+    margin-top: 20px;
+    max-width: 1400px;
+
+    .ant-form {
+      .ant-select {
+        width: 200px;
+      }
+
+      .reset {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .table {
+    .table-top {
+      button {
+        margin-left: auto;
+      }
+    }
+
+    .table-img {
+      margin-right: 10px;
+    }
+  }
+}
+
+.modal {
+  .modal-item {
+    margin-bottom: 20px;
+    text-align: center;
+
+    .account {
+      color: red;
+      font-size: 26px;
+      margin-right: 6px;
+    }
+  }
+}
+
+
+.remark-list {
+  ul {
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #fff;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .remark-top {
+        display: flex;
+        color: #ddd;
+
+        span {
+          &:nth-child(1) {}
+
+          &:nth-child(2) {
+            margin-left: 10px;
+          }
+
+          &:nth-child(3) {
+            margin-left: 20px;
+          }
+        }
+      }
+
+      .remark-content {
+        margin-top: 10px;
+      }
+    }
+  }
+}

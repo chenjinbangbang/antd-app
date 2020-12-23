@@ -1,0 +1,131 @@
+<div class="account-info">
+
+  <!-- 系统账户充值弹框 -->
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="600" [nzClosable]="false"
+    (nzOnCancel)="isVisible = false">
+    <div class="modal">
+
+      <div class="modal-title">Topup</div>
+
+      <div class="wheel-form">
+        <form nz-form nzLayout="horizontal" [formGroup]="topupForm" (ngSubmit)="submitTopupForm()">
+          <!-- <nz-form-item>
+            <nz-form-label nzSpan="5">Account ID</nz-form-label>
+            <nz-form-control>14646545456</nz-form-control>
+          </nz-form-item> -->
+
+          <nz-form-item>
+            <nz-form-label nzSpan="5">Account Name</nz-form-label>
+            <nz-form-control>{{topupForm.value.accountName}}</nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item nzFlex="true">
+            <nz-form-label nzSpan="5" nzRequired>Amount</nz-form-label>
+            <nz-form-control nzHasFeedback nzErrorTip="Enter topup Account">
+              <nz-input-number formControlName="amount" [nzMin]="1" [nzMax]="99999999" [nzStep]="0.01">
+              </nz-input-number>
+            </nz-form-control>
+            <span style="margin: 10px;">peso</span>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzSpan="5">Deposit Slip No</nz-form-label>
+            <nz-form-control nzSpan="19" nzHasFeedback nzErrorTip="Enter bank deposit slip no">
+              <input nz-input formControlName="bankDepositReceipt" id="bankDepositReceipt" maxlength="60"
+                placeholder="Enter bank deposit slip no" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item nz-row [nzFlex]="true">
+            <app-upload nz-col nzOffset="5" [length]="1" [multiple]="true" [fileList]="imageUrlList" (changeFile)="changeFile($event, 'imageUrlList')"></app-upload>
+
+            <div class="form-item-note">JPG and PNG images within 1M limit</div>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzSpan="5">Remark</nz-form-label>
+            <nz-form-control nzSpan="19" nzHasFeedback nzErrorTip="Enter the remark">
+              <textarea nz-input formControlName="remark" id="remark" maxlength="120" placeholder="Enter the remark"
+                [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+            </nz-form-control>
+            <div class="text-length">{{topupForm.value.remark.length}}/120</div>
+          </nz-form-item>
+
+          <nz-form-item class="form-footer">
+            <nz-form-control>
+              <button nz-button nzType="default" (click)="topupCancel($event)">Cancel</button>
+              <button nz-button nzType="primary" style="margin-left: 20px;">Confirm</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+  </nz-modal>
+
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>System Account</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Account Info</nz-breadcrumb-item>
+  </nz-breadcrumb>
+
+  <div class="stat">
+    <div class="stat-title">Statistics</div>
+    <ul>
+      <li>
+        <div>
+          <p><span>{{detail.accumulatedTopup || '0.00'}}</span><span>peso</span></p>
+          <p>Accumulated Topup</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <p><span>{{detail.accumulatedOutlay || '0.00'}}</span><span>peso</span></p>
+          <p>Accumulated Spending</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <p><span>{{detail.accumulatedIncome || '0.00'}}</span><span>peso</span></p>
+          <p>Accumulated Income</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <p><span>{{detail.accumulatedRefund || '0.00'}}</span><span>peso</span></p>
+          <p>Accumulated Refund(outgoing)</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="wallet">
+    <ul class="wallet-data">
+      <li class="wallet-title">{{accountNameData[detail.accountName]}}</li>
+      <li>
+        <div class="wallet-btn"></div>
+        <p><span>{{detail.balance || '0.00'}}</span><span>peso</span></p>
+        <p>Available Balance</p>
+      </li>
+      <!-- <li>
+        <div class="wallet-btn">&nbsp;</div>
+        <p><span>0.00</span><span>peso</span></p>
+        <p>Frozen Amount</p>
+      </li> -->
+      <li>
+        <div class="wallet-btn">
+          <button nz-button nzType="primary" (click)="topupFn($event)">Topup</button>
+          <button nz-button nzType="link" (click)="toTransaction()">Transaction Record</button>
+        </div>
+        <p><span>{{detail.totalAmount || '0.00'}}</span><span>peso</span></p>
+        <p>Total Amount</p>
+      </li>
+    </ul>
+
+    <ul class="wallet-info">
+      <li><span>Owner Type：</span><span>{{detail.ownerType}}</span></li>
+      <li><span>Owner Name：</span><span>{{detail.ownerName}}</span></li>
+      <li><span>Account Type：</span><span>{{detail.accountType}}</span></li>
+      <li><span>Account usage：</span><span>{{detail.accountUsage}}</span></li>
+      <!-- <li><span>Account ID：</span><span>{{detail.accountUsage}}</span></li> -->
+    </ul>
+  </div>
+</div>

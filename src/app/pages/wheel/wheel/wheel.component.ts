@@ -98,12 +98,12 @@ export class WheelComponent implements OnInit {
     this.wheelService.getRotaryTable(params).subscribe(res => {
       console.log('get the rotary table page（获取大转盘列表）', res);
 
-      this.isAllStop = res.data.every(item => {
+      this.isAllStop = res.data.data.every(item => {
         return item.status === 'DISABLED'
       });
 
-      this.lists = res.data;
-      this.total = res.total_counts;
+      this.lists = res.data.data;
+      this.total = res.data.total_counts;
       this.loading = false;
     })
   }
@@ -152,14 +152,14 @@ export class WheelComponent implements OnInit {
   editFn(rotaryTableId) {
     console.log('编辑活动', rotaryTableId);
 
-    this.router.navigate(["/wheel/wheel-setting", { rotaryTableId }])
+    this.router.navigate(["/wheel/wheel-setting"], { queryParams: { rotaryTableId } })
   }
 
   // 抽奖结果
   resultFn(rotaryTableId) {
     console.log('抽奖结果', rotaryTableId);
 
-    this.router.navigate(['/wheel/wheel-result', { rotaryTableId }])
+    this.router.navigate(['/wheel/wheel-result'], { queryParams: { rotaryTableId } })
   }
 
   // 删除活动

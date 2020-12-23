@@ -1,16 +1,23 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
+// import { EnvServiceFactory } from '../app/env.service.provider';
+// const env = EnvServiceFactory();
+// const { productionMode, PORTAL_API_ENDPOINT, REWARD_API_ENDPOINT,USER_SERVICE_ENDPOINT, PAYMENT_ENDPOINT, DIAL_CODE, Domain, RaffleService } = env;
+
+let PORTAL_API_ENDPOINT = 'https://devbackendapi.fortunepay.com.ph/api';
+let REWARD_API_ENDPOINT = 'https://devrewardserviceapi.fortunepay.com.ph/api';
+let PAYMENT_ENDPOINT = 'https://devapi.fortunepay.com.ph/v1';
+let USER_SERVICE_ENDPOINT = 'https://devuserservice.fortunepay.com.ph/api/setting/v1';
+let DIAL_CODE = '+91';
+let productionMode = false;
+let Domain = 'https://devbackendapi.fortunepay.com.ph';
+let RaffleService = 'https://devraffleserviceapi.fortunepay.com.ph/api';
 
 export const environment = {
-  production: false
+  production: productionMode,
+  APIEndpoint: PORTAL_API_ENDPOINT,
+  REWARDAPTEndpoint: REWARD_API_ENDPOINT,
+  PaymentAPIEndpoint: PAYMENT_ENDPOINT,
+  USERSERVICEENDPoint: USER_SERVICE_ENDPOINT,
+  DIAL_CODE: DIAL_CODE,
+  Domain: Domain,
+  RaffleService
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

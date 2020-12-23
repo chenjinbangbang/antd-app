@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, interval, of, pipe } from 'rxjs';
-import { ApiService } from './api.service';
 import { map, filter } from 'rxjs/operators';
+import { RaffleService } from './raffle.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WheelService {
 
-  constructor(private apiService: ApiService) { }
+  constructor(private raffleService: RaffleService) { }
 
   // get the rotary table page（获取大转盘列表）
-  getRotaryTable(params): Observable<any> {
-    return this.apiService.get('/api/setting/v1/rotary/table', params).map(res => {
-      return res.data;
+  getRotaryTable(data): Observable<any> {
+    return this.raffleService.get('/setting/v1/rotary/table', data).map(res => {
+      return res;
     })
 
-    // const data = from(this.apiService.get(url, params));
+    // const data = from(this.raffleService.get(url, params));
     // console.log('----',data)
     // data.subscribe({
     //   next(res) { console.log('next', res) },
@@ -47,70 +47,95 @@ export class WheelService {
 
   // update the rotary table status info（更改活动状态）
   tableStatus(data): Observable<any> {
-    return this.apiService.put('/api/setting/v1/rotary/table/status', data).map(res => {
-      return res.data;
+    return this.raffleService.put('/setting/v1/rotary/table/status', data).map(res => {
+      return res;
     })
   }
 
   // delete the rotary table（删除活动）
   deleteRotary(rotaryTableId): Observable<any> {
-    return this.apiService.delete(`/api/setting/v1/rotary/table/${rotaryTableId}`).map(res => {
-      return res.data;
+    return this.raffleService.delete(`/setting/v1/rotary/table/${rotaryTableId}`).map(res => {
+      return res;
     })
   }
 
   // export the rotary table user lottery list to excel（大转盘抽奖结果导出excel）
   lotteryExport(params): Observable<any> {
-    return this.apiService.export(`/api/setting/v1/rotary/table/user/lottery/export`, params).map(res => {
+    return this.raffleService.export(`/setting/v1/rotary/table/user/lottery/export`, params).map(res => {
       // return res.data;
-      console.log('导出excel', res)
+      console.log('导出excel')
 
       let csvData = res;
       let today = new Date();
-      let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '_' + new Date().getTime() + '.xls';
       let filename = date.toString()
 
-      let blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
-      let dwldLink = document.createElement("a");
-      let url = URL.createObjectURL(blob);
-      let isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
-      if (isSafariBrowser) {  //if Safari open in new window to save file with random filename.
-        dwldLink.setAttribute("target", "_blank");
+      // let blob = new Blob(['\ufeff' + csvData], { type: 'text/xls;charset=utf-8;' });
+      // let dwldLink = document.createElement("a");
+      // let url = URL.createObjectURL(blob);
+      // let isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
+      // if (isSafariBrowser) {  //if Safari open in new window to save file with random filename.
+      //   dwldLink.setAttribute("target", "_blank");
+      // }
+      // dwldLink.setAttribute("href", url);
+      // dwldLink.setAttribute("download", "txns-" + filename);
+      // dwldLink.style.visibility = "hidden";
+      // document.body.appendChild(dwldLink);
+      // dwldLink.click();
+      // document.body.removeChild(dwldLink);
+
+      // 下载文件（res：包含data: blob文件）
+      console.log("msSaveBlob" in navigator, "download" in document.createElement("a"), filename)
+      if ("msSaveBlob" in navigator) {
+        window.navigator.msSaveBlob(res, filename);
+      } else if ("download" in document.createElement("a")) {
+        if (!res) {
+          return;
+        }
+        let url = window.URL.createObjectURL(new Blob([res]));
+        // console.log(url);
+        let link = document.createElement("a");
+        link.style.display = "none";
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
       }
-      dwldLink.setAttribute("href", url);
-      dwldLink.setAttribute("download", "txns-" + filename + ".csv");
-      dwldLink.style.visibility = "hidden";
-      document.body.appendChild(dwldLink);
-      dwldLink.click();
-      document.body.removeChild(dwldLink);
     })
   }
 
   // get the rotary table user lottery page（获取大转盘抽奖结果）
-  getLottery(params): Observable<any> {
-    return this.apiService.get(`/api/setting/v1/rotary/table/user/lottery`, params).map(res => {
-      return res.data;
+  getLottery(data): Observable<any> {
+    return this.raffleService.get(`/setting/v1/rotary/table/user/lottery`, data).map(res => {
+      return res;
     })
   }
 
   // Deliver the entity prizes（确认收货）
   lotteryDelivery(data): Observable<any> {
-    return this.apiService.post(`/api/setting/v1/rotary/table/user/lottery/delivery`, data).map(res => {
-      return res.data;
+    return this.raffleService.post(`/setting/v1/rotary/table/user/lottery/delivery`, data).map(res => {
+      return res;
     })
   }
 
   // get the rotary table info details（获取某个活动详情）
   rotaryTableDetail(rotaryTableId): Observable<any> {
-    return this.apiService.get(`/api/setting/v1/rotary/table/${rotaryTableId}`).map(res => {
-      return res.data;
+    return this.raffleService.get(`/setting/v1/rotary/table/${rotaryTableId}`).map(res => {
+      return res;
     })
   }
 
   // save the rotary table info（添加/编辑大转盘活动）
   rotaryTable(data): Observable<any> {
-    return this.apiService.post(`/api/setting/v1/rotary/table`, data).map(res => {
-      return res.data;
+    return this.raffleService.post(`/setting/v1/rotary/table`, data).map(res => {
+      return res;
+    })
+  }
+
+  // get the candy record page（获取糖果明细列表）
+  candyRecord(data): Observable<any> {
+    return this.raffleService.get(`/setting/v1/candy/record`, data).map(res => {
+      return res;
     })
   }
 
