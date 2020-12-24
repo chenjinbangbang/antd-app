@@ -143,7 +143,7 @@
           </td>
           <td [ngClass]="{ success: item.status === 'SUCCESS', danger: item.status !== 'SUCCESS' }">{{item.amount}}</td>
           <td [ngClass]="statusColor[item.status]">{{statusData[item.status]}}</td>
-          <td>{{item.updatedTime}}</td>
+          <td>{{item.createdTime}}</td>
           <td>{{item.updatedBy}}</td>
           <td>
             <img *ngIf="item.uploadReceiptUrl" [src]="item.uploadReceiptUrl" alt class="table-img" />

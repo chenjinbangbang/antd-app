@@ -86,7 +86,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of lists; let i=index">
-          <td>{{item.accountName}}</td>
+          <td>{{accountNameData[item.accountName]}}</td>
           <td>{{item.id}}</td>
           <td>{{transactionTypeData[item.transactionType]}}</td>
           <td>{{subTransactionTypeData[item.subTransactionType]}}</td>
