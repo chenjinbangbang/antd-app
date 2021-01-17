@@ -88,6 +88,7 @@ export class WheelResultComponent implements OnInit {
     //   goodsTotal: 5000
     // }
   ];
+  exportLoading: boolean = false; // 加载export
   total: number = 0; // 总页数
   pageIndex: number = 1; // 当前页码
   loading: boolean = false; // 加载中
@@ -162,9 +163,12 @@ export class WheelResultComponent implements OnInit {
 
   // export the rotary table user lottery list to excel（大转盘抽奖结果导出excel）
   exportFn() {
+    this.exportLoading = true;
     let params = this.setParams();
 
-    this.wheelService.lotteryExport(params).subscribe();
+    this.wheelService.lotteryExport(params).subscribe((res: any) => {
+      this.exportLoading = false;
+    });
   }
 
   // get the rotary table user lottery page（获取大转盘抽奖结果）
@@ -175,8 +179,8 @@ export class WheelResultComponent implements OnInit {
     this.wheelService.getLottery(params).subscribe((res: any) => {
       console.log('get the rotary table user lottery page（获取大转盘抽奖结果）', res);
 
-      this.lists = res.data.data;
-      this.total = res.data.total_counts;
+      this.lists = res.data;
+      this.total = res.total_counts;
       this.loading = false;
     })
   }

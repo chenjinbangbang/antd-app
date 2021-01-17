@@ -3,7 +3,7 @@
   <!-- Approve确认弹框 -->
   <nz-modal [(nzVisible)]="approveIsVisible" nzTitle="" [nzFooter]="null" [nzWidth]="600" [nzClosable]="false"
     (nzOnCancel)="approveIsVisible = false">
-    <div class="modal">
+    <div class="antd-modal">
 
       <div class="modal-title">Approval Confirm</div>
 
@@ -40,7 +40,7 @@
   <!-- Reject确认弹框 -->
   <nz-modal [(nzVisible)]="rejectIsVisible" nzTitle="" [nzFooter]="null" [nzWidth]="600" [nzClosable]="false"
     (nzOnCancel)="rejectIsVisible = false">
-    <div class="modal">
+    <div class="antd-modal">
 
       <div class="modal-title">Reject Confirm</div>
 
@@ -168,8 +168,8 @@
             </ng-template>
           </td>
           <td class="operation">
-            <button nz-button nzType="primary" (click)="operationFn(i, 1)">Approve</button>
-            <button nz-button nzType="danger" (click)="operationFn(i, 2)">Reject</button>
+            <button nz-button nzType="primary" (click)="operationFn(i, 1)" *ngIf="item.status === 'PENDING'">Approve</button>
+            <button nz-button nzType="danger" (click)="operationFn(i, 2)" *ngIf="item.status === 'PENDING'">Reject</button>
           </td>
         </tr>
       </tbody>

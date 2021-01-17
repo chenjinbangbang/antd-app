@@ -18,8 +18,8 @@ export class RaffleService {
     return this.http.get(`${this.API_URL}${path}`, { params });
   }
 
-  export(path: string, options: object={}): Observable<any> {
-    return this.http.get(`${this.API_URL}${path}`, options);
+  export(path: string, params: HttpParams = new HttpParams()): Observable<any> {
+    return this.http.get(`${this.API_URL}${path}`, { params, responseType: 'blob' });
   }
 
   put(path: string, body): Observable<any> {

@@ -143,8 +143,8 @@ export class TopupRecordComponent implements OnInit {
     this.systemAccountService.getSystemAccountTopup(params).subscribe((res: any) => {
       console.log('get the system account topup record page（获取系统账户充值记录）', res);
 
-      this.lists = res.data.data;
-      this.total = res.data.total_counts;
+      this.lists = res.data;
+      this.total = res.total_counts;
       this.loading = false;
     })
   }

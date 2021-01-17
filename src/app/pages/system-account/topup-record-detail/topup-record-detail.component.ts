@@ -92,7 +92,7 @@ export class TopupRecordDetailComponent implements OnInit {
     this.systemAccountService.systemAccountTopupDetail(this.id).subscribe((res: any) => {
       console.log('get the system account topup details by id（通过ID获取系统账户充值详细信息）', res);
 
-      this.detail = res.data;
+      this.detail = res;
     })
   }
 

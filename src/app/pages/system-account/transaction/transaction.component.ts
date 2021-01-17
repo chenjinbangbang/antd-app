@@ -170,8 +170,8 @@ export class TransactionComponent implements OnInit {
     this.systemAccountService.systemAccountTransaction(params).subscribe((res: any) => {
       console.log('get the system account transaction record page（获取系统账户交易记录）', res);
 
-      this.lists = res.data.data;
-      this.total = res.data.total_counts;
+      this.lists = res.data;
+      this.total = res.total_counts;
       this.loading = false;
     })
   }

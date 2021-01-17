@@ -84,8 +84,8 @@ export class CandyListComponent implements OnInit {
     this.wheelService.candyRecord(params).subscribe((res: any) => {
       console.log('get the candy record page（获取糖果明细列表）', res);
 
-      this.lists = res.data.data;
-      this.total = res.data.total_counts;
+      this.lists = res.data;
+      this.total = res.total_counts;
       this.loading = false;
     })
   }

@@ -3,7 +3,7 @@
   <!-- 选择城市弹框 -->
   <nz-modal [(nzVisible)]="isCityVisible" nzTitle="" [nzFooter]="null" [nzWidth]="800" [nzClosable]="false"
     (nzOnCancel)="isCityVisible = false">
-    <div class="modal">
+    <div class="antd-modal">
       <div class="modal-title">City Rules</div>
 
       <div class="city-modal">
@@ -16,20 +16,24 @@
 
         <div class="city-select">
           <span>Select region：</span>
-          <nz-select [(ngModel)]="region_code" nzPlaceHolder="Select region" id="" [nzAllowClear]="true" (ngModelChange)="changeRegion($event)">
+          <nz-select [(ngModel)]="region_code" nzPlaceHolder="Select region" id="" [nzAllowClear]="true"
+            (ngModelChange)="changeRegion($event)">
             <nz-option *ngFor="let item of regionList; let i=index" [nzValue]="item.code" [nzLabel]="item.region_name">
             </nz-option>
           </nz-select>
           <span style="margin-left: 20px;">Select province：</span>
-          <nz-select [(ngModel)]="province_code" nzPlaceHolder="Select province" id="province_code" [nzAllowClear]="true" (ngModelChange)="changeProvince($event)">
-            <nz-option *ngFor="let item of provinceList; let i=index" [nzValue]="item.province_code" [nzLabel]="item.province_name">
+          <nz-select [(ngModel)]="province_code" nzPlaceHolder="Select province" id="province_code"
+            [nzAllowClear]="true" (ngModelChange)="changeProvince($event)">
+            <nz-option *ngFor="let item of provinceList; let i=index" [nzValue]="item.province_code"
+              [nzLabel]="item.province_name">
             </nz-option>
           </nz-select>
         </div>
 
         <div class="city-list">
           <ul>
-            <li *ngFor="let item of cityList; let i=index" (click)="selectCity(item)" [ngClass]="{active: selectCityIds.includes(item.city_municipality_id)}">{{item.city_name}}</li>
+            <li *ngFor="let item of cityList; let i=index" (click)="selectCity(item)"
+              [ngClass]="{active: selectCityIds.includes(item.city_municipality_id)}">{{item.city_name}}</li>
           </ul>
         </div>
 
@@ -44,7 +48,7 @@
   <!-- 奖品设置弹框 -->
   <nz-modal [(nzVisible)]="isVisible" nzTitle="" [nzFooter]="null" [nzWidth]="1000" [nzClosable]="false"
     (nzOnCancel)="isVisible = false">
-    <div class="modal">
+    <div class="antd-modal">
 
       <div class="modal-title">Prize setting</div>
 
@@ -88,8 +92,8 @@
           <nz-form-item>
             <nz-form-label nzRequired nzFor="description">Description</nz-form-label>
             <nz-form-control nzHasFeedback nzErrorTip="Enter description">
-              <textarea nz-input formControlName="description" id="description" maxlength="500" placeholder="Enter description"
-                [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
+              <textarea nz-input formControlName="description" id="description" maxlength="500"
+                placeholder="Enter description" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
             </nz-form-control>
             <div class="text-length">{{prizeForm.value.description.length}}/500</div>
           </nz-form-item>
@@ -98,7 +102,7 @@
             <nz-form-label nzRequired>Thumbnail</nz-form-label>
 
             <app-upload nz-col nzSpan="24" [length]="1" [fileList]="imageUrlList"
-							(changeFile)="changeFile($event, 'imageUrlList')"></app-upload>
+              (changeFile)="changeFile($event, 'imageUrlList')"></app-upload>
           </nz-form-item>
 
           <nz-form-item nz-row>
@@ -114,21 +118,29 @@
           <nz-form-item *ngIf="true">
             <div style="display: flex;">
               <nz-form-label nzRequired nzFor="winnerNumbers">Probability of Winning</nz-form-label>
-              <div class="form-item-note">（Please fill the sequential No.  of winning, seperate them with semicolon）</div>
+              <div class="form-item-note">（Please fill the sequential No. of winning, seperate them with semicolon）
+              </div>
             </div>
 
             <nz-form-control nzHasFeedback [nzErrorTip]="goodsPrizeRateTip">
               <!-- <textarea nz-tooltip [nzTooltipTitle]="'The probability of winning is currently set：' + winnerNumbers.join(';')" nz-input formControlName="winnerNumbers" id="winnerNumbers" maxlength="500"
                 placeholder="Enter probability of winning" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea> -->
-                <textarea nz-input formControlName="winnerNumbers" id="winnerNumbers" maxlength="500"
+              <textarea nz-input formControlName="winnerNumbers" id="winnerNumbers" maxlength="500"
                 placeholder="Enter probability of winning" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
               <ng-template #goodsPrizeRateTip let-control>
-                <ng-container *ngIf="control.hasError('required');">Please enter the probability of winning</ng-container>
-                <ng-container *ngIf="control.hasError('regError')">Only Numbers and half angles can be entered;</ng-container>
-                <ng-container *ngIf="control.hasError('inputError')">Half Angle for multiple data;separated</ng-container>
-                <ng-container *ngIf="control.hasError('rangeError')">You can only enter positive integers from 1 to 1000</ng-container>
-                <ng-container *ngIf="control.hasError('repeatError')">The lottery probability is not allowed to be repeated</ng-container>
-                <ng-container *ngIf="control.hasError('repeatEAllError')">The draw probability of all prizes cannot be repeated</ng-container>
+                <ng-container *ngIf="control.hasError('required');">Please enter the probability of winning
+                </ng-container>
+                <ng-container *ngIf="control.hasError('regError')">Only Numbers and half angles can be entered;
+                </ng-container>
+                <ng-container *ngIf="control.hasError('inputError')">Half Angle for multiple data;separated
+                </ng-container>
+                <ng-container *ngIf="control.hasError('rangeError')">You can only enter positive integers from 1 to 1000
+                </ng-container>
+                <ng-container *ngIf="control.hasError('repeatError')">The lottery probability is not allowed to be
+                  repeated</ng-container>
+                <ng-container *ngIf="control.hasError('lotteryCycleError')">The sequential number of "Probability of Winning" should be less than or equal to "Odds by total number of people"</ng-container>
+                <ng-container *ngIf="control.hasError('repeatAllError')">The draw probability of all prizes cannot be
+                  repeated</ng-container>
               </ng-template>
             </nz-form-control>
             <div class="text-length">{{prizeForm.value.winnerNumbers.length}}/500</div>
@@ -288,7 +300,8 @@
             </div>
           </nz-form-control>
 
-          <div *ngIf="form.errors?.costError" class="danger" style="margin-top: 10px;">You can choose more than one of the above three options, but you must choose one</div>
+          <div *ngIf="form.errors?.costError" class="danger" style="margin-top: 10px;">You can choose more than one of
+            the above three options, but you must choose one</div>
         </div>
       </nz-form-item>
 
@@ -326,10 +339,10 @@
       <nz-form-item>
         <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="rule">Activity Rules</nz-form-label>
         <nz-form-control [nzSm]="21" [nzXs]="24" nzHasFeedback nzErrorTip="Enter activity rules">
-          <textarea nz-input formControlName="rule" id="rule" maxlength="1000" placeholder="Enter activity rules"
+          <textarea nz-input formControlName="rule" id="rule" maxlength="3000" placeholder="Enter activity rules"
             [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
         </nz-form-control>
-        <div class="text-length">{{form.value.rule.length}}/1000</div>
+        <div class="text-length">{{form.value.rule.length}}/3000</div>
       </nz-form-item>
 
       <nz-form-item>

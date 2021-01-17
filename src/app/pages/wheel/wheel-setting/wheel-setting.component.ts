@@ -117,7 +117,7 @@ export class WheelSettingComponent implements OnInit {
     //   // this.fb.control({ cityMunicipalityId: 1, cityName: '深圳' })
     // ]),
     lotteryCycle: ['', [Validators.required]],
-    rule: ['', [Validators.required, Validators.maxLength(1000)]],
+    rule: ['', [Validators.required, Validators.maxLength(3000)]],
     // prizes: this.fb.array([
     //   this.fb.control({ }),
     //   this.fb.control({ }),
@@ -180,7 +180,8 @@ export class WheelSettingComponent implements OnInit {
       }
 
       let arr = val.split(';');
-      // console.log(arr);
+      console.log('中奖概率校验--', arr);
+
       for (let i in arr) {
         if (!arr[i]) {
           return { inputError: true };
@@ -198,15 +199,22 @@ export class WheelSettingComponent implements OnInit {
             }
           }
         }
-      }
 
-      // console.log('----', this)
-
-      for (let item of this.winnerNumbers) {
-        if (val.includes(Number(item))) {
-          return { repeatEAllError: true };
+        // 中奖概率不能大于按总人数计算的赔率
+        if(arr[i] > this.form.value.lotteryCycle) {
+          return { lotteryCycleError: true }
         }
       }
+
+      console.log('winnerNumbers--', this.winnerNumbers)
+
+      for (let item of this.winnerNumbers) {
+        if (arr.includes(item)) {
+          return { repeatAllError: true };
+        }
+      }
+
+
 
     }
     return null;
@@ -300,38 +308,38 @@ export class WheelSettingComponent implements OnInit {
         // 初始化奖品列表
         let prizes: any[] = [];
         for (let i = 0; i < 8; i++) {
-          prizes.push({
-            allQuantity: '',
-            amount: '',
-            description: "",
-            entityImageUrls: [],
-            everydayQuantity: '',
-            imageUrl: "",
-            name: "",
-            type: null,
-            winnerNumbers: "",
-          })
           // prizes.push({
-          //   allQuantity: 100,
-          //   amount: 30,
-          //   description: "奖品描述奖品描述",
+          //   allQuantity: '',
+          //   amount: '',
+          //   description: "",
           //   entityImageUrls: [],
-          //   everydayQuantity: 20,
-          //   imageUrl: "https://d2fcenhuvgkdg9.cloudfront.net/default/71b18853-1fbc-4deb-99ba-6a981bb2f6ee.jpg",
-          //   name: "华为meta40",
-          //   type: "ENTITY",
-          //   winnerNumbers: `10${i};20${i}`,
+          //   everydayQuantity: '',
+          //   imageUrl: "",
+          //   name: "",
+          //   type: null,
+          //   winnerNumbers: "",
           // })
+          prizes.push({
+            allQuantity: 100,
+            amount: 30,
+            description: "奖品描述奖品描述",
+            entityImageUrls: [],
+            everydayQuantity: 20,
+            imageUrl: "https://d2fcenhuvgkdg9.cloudfront.net/default/71b18853-1fbc-4deb-99ba-6a981bb2f6ee.jpg",
+            name: "华为meta40",
+            type: "ENTITY",
+            winnerNumbers: `10${i};20${i}`,
+          })
         }
         this.prizes = prizes;
       }
     })
 
     // 获取地区列表
-    this.commonService.getRegionList({ country_id: '173' }).subscribe((res: any) => {
+    this.commonService.getRegionList('173').subscribe((res: any) => {
       console.log('获取地区列表：', res);
-      this.regionList = res.data;
-      this.region_code = res.data[0].code;
+      this.regionList = res;
+      this.region_code = res[0].code;
 
       // 获取省份列表，并且默认选中第一个省份
       this.getProvinceList(this.region_code);
@@ -347,18 +355,18 @@ export class WheelSettingComponent implements OnInit {
       console.log('get the rotary table info details（获取某个活动详情）', res);
 
       // 处理图片
-      this.backgroundFileList = [res.data.backgroundImageUrl]
-      this.rotaryTableFileList = [res.data.rotaryTableImageUrl]
+      this.backgroundFileList = [res.backgroundImageUrl]
+      this.rotaryTableFileList = [res.rotaryTableImageUrl]
 
       // 处理奖品表格
       // this.prizeInfos = res.prizeInfos
-      this.prizes = res.data.prizeInfos
-      res.data.startTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.data.startTime);
-      res.data.endTime = dateformat(dateformat(new Date(), 'yyyy-mm=dd') + ' ' + res.data.endTime);
-      delete res.data.prizeInfos
+      this.prizes = res.prizeInfos
+      res.startTime = new Date(dateformat(new Date(), 'yyyy-mm-dd') + ' ' + res.startTime);
+      res.endTime = new Date(dateformat(new Date(), 'yyyy-mm-dd') + ' ' + res.endTime);
+      delete res.prizeInfos
 
-      this.form.patchValue(res.data);
-      this.citys = res.data.citys;
+      this.form.patchValue(res);
+      this.citys = res.citys;
 
       console.log('城市', this.citys);
 
@@ -380,10 +388,10 @@ export class WheelSettingComponent implements OnInit {
   // 获取省份列表，并且默认选中第一个省份
   getProvinceList(region_code) {
     // 获取省份列表
-    this.commonService.getProvinceList({ region_code }).subscribe((res: any) => {
+    this.commonService.getProvinceList(region_code).subscribe((res: any) => {
       console.log('获取省份列表：', res);
-      this.provinceList = res.data;
-      this.province_code = res.data[0].province_code;
+      this.provinceList = res;
+      this.province_code = res[0].province_code;
 
       // 获取城市列表
       this.getCityMunicipalityList(this.province_code);
@@ -393,9 +401,9 @@ export class WheelSettingComponent implements OnInit {
   // 获取城市列表
   getCityMunicipalityList(province_code) {
     // 获取城市列表
-    this.commonService.getCityMunicipalityList({ province_code }).subscribe((res: any) => {
+    this.commonService.getCityMunicipalityList(province_code).subscribe((res: any) => {
       console.log('获取城市列表', res);
-      this.cityList = res.data;
+      this.cityList = res;
     })
   }
 
@@ -635,9 +643,10 @@ export class WheelSettingComponent implements OnInit {
     this.uploadWinnerNumbers(i);
 
     this.imageUrlList = this.prizes[i].imageUrl ? [this.prizes[i].imageUrl] : [];
-    console.log('imageUrlList', this.imageUrlList)
+    console.log('imageUrlList', this.imageUrlList);
 
     this.entityImageUrls = this.prizes[i].entityImageUrls;
+    console.log('imageUrlList', this.imageUrlList);
 
     this.prizeForm.patchValue(this.prizes[i]);
   }

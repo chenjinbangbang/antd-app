@@ -33,7 +33,7 @@ export class UploadComponent implements OnInit {
   }
 
   inputFn(){
-    console.log(this.inputUpload.nativeElement);
+    console.log('--', this.inputUpload.nativeElement);
     // 扩展此基类以实现自定义渲染器
     // this.renderer.setStyle(this.inputUpload.nativeElement, 'border', '1px solid #f00');
     this.inputUpload.nativeElement.click();

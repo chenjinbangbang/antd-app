@@ -101,9 +101,16 @@
   }
 }
 
-.modal {
+.antd-modal {
+
+  .modal-form{
+    .form-item-note{
+      margin-top: 0;
+    }
+  }
+
   // 选择城市样式
-  .city-modal {modal
+  .city-modal {
     .choose-city {
       margin-top: 20px;
       display: flex;

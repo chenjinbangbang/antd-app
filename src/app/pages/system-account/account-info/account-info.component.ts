@@ -51,7 +51,7 @@ export class AccountInfoComponent implements OnInit {
     this.systemAccountService.systemAccountTransactionStat().subscribe((res: any) => {
       console.log('get the system account transaction statistics info（获取系统账户交易统计信息）', res);
 
-      this.detail = res.data;
+      this.detail = res;
     })
   }
 

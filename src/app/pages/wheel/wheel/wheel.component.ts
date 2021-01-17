@@ -98,12 +98,12 @@ export class WheelComponent implements OnInit {
     this.wheelService.getRotaryTable(params).subscribe(res => {
       console.log('get the rotary table page（获取大转盘列表）', res);
 
-      this.isAllStop = res.data.data.every(item => {
+      this.isAllStop = res.data.every(item => {
         return item.status === 'DISABLED'
       });
 
-      this.lists = res.data.data;
-      this.total = res.data.total_counts;
+      this.lists = res.data;
+      this.total = res.total_counts;
       this.loading = false;
     })
   }

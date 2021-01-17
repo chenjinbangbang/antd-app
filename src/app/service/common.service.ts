@@ -14,31 +14,42 @@ export class CommonService {
   ) { }
 
   // 获取地区列表
-  getRegionList(params): Observable<any> {
-    return this.apiService.get('/region-list', params).map(res => {
-      return res;
+  getRegionList(country_id = null): Observable<any> {
+    let url = '/region-list';
+    if (country_id) {
+      url += `?country_id=${country_id}`;
+    }
+    return this.apiService.get(url).map(response => {
+      return response.data;
     })
   }
 
   // 获取省份列表
-  getProvinceList(params): Observable<any> {
-    return this.apiService.get('/province-list', params).map(res => {
-      return res;
+  getProvinceList(code = null): Observable<any> {
+    let url = '/province-list';  
+    if(code) {
+      url += `?region_code=${code}`
+    }
+    return this.apiService.get(url).map(response => {
+      return response.data;
     })
   }
 
   // 获取城市列表
-  getCityMunicipalityList(params): Observable<any> {
-    return this.apiService.get('/city-municipality-list', params).map(res => {
-      return res;
+  getCityMunicipalityList(code = null): Observable<any> {
+    let url = '/city-municipality-list';  
+    if(code) {
+      url += `?province_code=${code}`
+    }
+    return this.apiService.get(url).map(response => {
+      return response.data;
     })
   }
 
   // 上传文件
   imageUpload(data): Observable<any> {
-    return this.raffleService.post('/setting/v1/image/upload', data).map(res => {
-      return res;
+    return this.raffleService.post('/setting/v1/image/upload', data).map(response => {
+      return response.data;
     })
   }
-
 }

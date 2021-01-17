@@ -13,7 +13,7 @@ export class WheelService {
   // get the rotary table page（获取大转盘列表）
   getRotaryTable(data): Observable<any> {
     return this.raffleService.get('/setting/v1/rotary/table', data).map(res => {
-      return res;
+      return res.data;
     })
 
     // const data = from(this.raffleService.get(url, params));
@@ -48,14 +48,14 @@ export class WheelService {
   // update the rotary table status info（更改活动状态）
   tableStatus(data): Observable<any> {
     return this.raffleService.put('/setting/v1/rotary/table/status', data).map(res => {
-      return res;
+      return res.data;
     })
   }
 
   // delete the rotary table（删除活动）
   deleteRotary(rotaryTableId): Observable<any> {
     return this.raffleService.delete(`/setting/v1/rotary/table/${rotaryTableId}`).map(res => {
-      return res;
+      return res.data;
     })
   }
 
@@ -63,7 +63,7 @@ export class WheelService {
   lotteryExport(params): Observable<any> {
     return this.raffleService.export(`/setting/v1/rotary/table/user/lottery/export`, params).map(res => {
       // return res.data;
-      console.log('导出excel')
+      console.log('导出excel');
 
       let csvData = res;
       let today = new Date();
@@ -107,35 +107,35 @@ export class WheelService {
   // get the rotary table user lottery page（获取大转盘抽奖结果）
   getLottery(data): Observable<any> {
     return this.raffleService.get(`/setting/v1/rotary/table/user/lottery`, data).map(res => {
-      return res;
+      return res.data;
     })
   }
 
   // Deliver the entity prizes（确认收货）
   lotteryDelivery(data): Observable<any> {
     return this.raffleService.post(`/setting/v1/rotary/table/user/lottery/delivery`, data).map(res => {
-      return res;
+      return res.data;
     })
   }
 
   // get the rotary table info details（获取某个活动详情）
   rotaryTableDetail(rotaryTableId): Observable<any> {
     return this.raffleService.get(`/setting/v1/rotary/table/${rotaryTableId}`).map(res => {
-      return res;
+      return res.data;
     })
   }
 
   // save the rotary table info（添加/编辑大转盘活动）
   rotaryTable(data): Observable<any> {
     return this.raffleService.post(`/setting/v1/rotary/table`, data).map(res => {
-      return res;
+      return res.data;
     })
   }
 
   // get the candy record page（获取糖果明细列表）
   candyRecord(data): Observable<any> {
     return this.raffleService.get(`/setting/v1/candy/record`, data).map(res => {
-      return res;
+      return res.data;
     })
   }
 

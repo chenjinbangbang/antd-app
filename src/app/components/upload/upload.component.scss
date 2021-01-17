@@ -60,6 +60,8 @@
 
   .upload-icon {
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
     .icon-plus {
       font-size: 32px;
       color: #999;
@@ -71,7 +73,6 @@
       position: absolute;
       top: -1000px;
       left: 0;
-      
     }
   }
 }
