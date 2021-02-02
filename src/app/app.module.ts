@@ -22,16 +22,10 @@ import { NZ_I18N, en_US } from 'ng-zorro-antd';
 
 import { AppComponent } from './app.component';
 // import { StepComponent } from './components/step/step.component';
-import { HomeComponent } from './pages/home/home.component';
+import { HomeComponent } from './home/home.component';
 
-import { IndexComponent } from './pages/wheel/index/index.component';
-import { AccountIndexComponent } from './pages/system-account/account-index/account-index.component';
-// import { WheelComponent } from './pages/wheel/wheel/wheel.component';
-// import { WheelResultComponent } from './pages/wheel/wheel-result/wheel-result.component';
-// import { WheelSettingComponent } from './pages/wheel/wheel-setting/wheel-setting.component';
-
-// import { ActivityComponent } from './pages/activity/activity.component';
-
+import { IndexComponent } from './wheel/index/index.component';
+import { AccountIndexComponent } from './system-account/account-index/account-index.component';
 
 @NgModule({
   declarations: [

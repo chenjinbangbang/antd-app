@@ -57,7 +57,7 @@
           <nz-form-item>
             <nz-form-label nzRequired nzFor="type">Prize type</nz-form-label>
             <nz-form-control [nzSpan]="8" nzHasFeedback nzErrorTip="Select prize type">
-              <nz-select formControlName="type" nzPlaceHolder="Select prize type" id="type" [nzAllowClear]="true">
+              <nz-select formControlName="type" nzPlaceHolder="Select prize type" id="type" [nzAllowClear]="true" (ngModelChange)="changePrizeType($event)">
                 <nz-option *ngFor="let item of goodsTypeList; let i=index" [nzValue]="item.value" [nzLabel]="item.name">
                 </nz-option>
               </nz-select>
@@ -115,7 +115,7 @@
               (changeFile)="changeFile($event, 'entityImageUrls')"></app-upload>
           </nz-form-item>
 
-          <nz-form-item *ngIf="true">
+          <nz-form-item *ngIf="prizeForm.value.type !== 'NOTHING'">
             <div style="display: flex;">
               <nz-form-label nzRequired nzFor="winnerNumbers">Probability of Winning</nz-form-label>
               <div class="form-item-note">（Please fill the sequential No. of winning, seperate them with semicolon）
@@ -125,6 +125,7 @@
             <nz-form-control nzHasFeedback [nzErrorTip]="goodsPrizeRateTip">
               <!-- <textarea nz-tooltip [nzTooltipTitle]="'The probability of winning is currently set：' + winnerNumbers.join(';')" nz-input formControlName="winnerNumbers" id="winnerNumbers" maxlength="500"
                 placeholder="Enter probability of winning" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea> -->
+
               <textarea nz-input formControlName="winnerNumbers" id="winnerNumbers" maxlength="500"
                 placeholder="Enter probability of winning" [nzAutosize]="{ minRows: 4, maxRows: 8 }"></textarea>
               <ng-template #goodsPrizeRateTip let-control>
@@ -138,7 +139,8 @@
                 </ng-container>
                 <ng-container *ngIf="control.hasError('repeatError')">The lottery probability is not allowed to be
                   repeated</ng-container>
-                <ng-container *ngIf="control.hasError('lotteryCycleError')">The sequential number of "Probability of Winning" should be less than or equal to "Odds by total number of people"</ng-container>
+                <ng-container *ngIf="control.hasError('lotteryCycleError')">The sequential number of "Probability of
+                  Winning" should be less than or equal to "Odds by total number of people"</ng-container>
                 <ng-container *ngIf="control.hasError('repeatAllError')">The draw probability of all prizes cannot be
                   repeated</ng-container>
               </ng-template>
@@ -146,7 +148,7 @@
             <div class="text-length">{{prizeForm.value.winnerNumbers.length}}/500</div>
           </nz-form-item>
 
-          <nz-form-item nz-row [nzFlex]="true" *ngIf="true">
+          <nz-form-item nz-row [nzFlex]="true" *ngIf="prizeForm.value.type !== 'NOTHING'">
             <div nz-col nzSpan="12">
               <nz-form-label nzRequired nzFor="everydayQuantity">Daily Inventory</nz-form-label>
               <nz-form-control nzHasFeedback nzErrorTip="Enter daily inventory">
@@ -155,7 +157,7 @@
               </nz-form-control>
             </div>
 
-            <div nz-col nzSpan="12" *ngIf="true">
+            <div nz-col nzSpan="12" *ngIf="prizeForm.value.type !== 'NOTHING'">
               <nz-form-label nzFor="allQuantity">Total Inventory</nz-form-label>
               <nz-form-control nzHasFeedback nzErrorTip="Enter total inventory">
                 <nz-input-number formControlName="allQuantity" [nzMin]="0" [nzMax]="9999999" [nzStep]="1">
@@ -366,9 +368,9 @@
                 <td><img *ngIf="item.imageUrl" [src]="item.imageUrl" alt class="table-img" /></td>
                 <td>{{goodsTypeData[item.type]}}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.type !== 'CANDY' ? item.winnerNumbers : '' }}</td>
-                <td>{{ item.type !== 'CANDY' ? item.everydayQuantity : '' }}</td>
-                <td>{{ item.type !== 'CANDY' ? item.allQuantity : '' }}</td>
+                <td>{{ item.winnerNumbers}}</td>
+                <td>{{ item.everydayQuantity }}</td>
+                <td>{{ item.allQuantity }}</td>
                 <td class="operation">
                   <button nz-button [ngClass]="{'text-success': item.imageUrl || item.description}"
                     (click)="settingPrize($event, i, item.id)">Setting</button>
@@ -381,7 +383,7 @@
 
       <nz-form-item nz-row>
         <div style="display: flex;">
-          <nz-form-label nzRequired>Background Template</nz-form-label>
+          <nz-form-label>Background Template</nz-form-label>
           <div class="form-item-note">（JPG and PNG images within 1M limit）</div>
         </div>
 
@@ -391,7 +393,7 @@
 
       <nz-form-item nz-row>
         <div style="display: flex;">
-          <nz-form-label nzRequired>Spinning Wheel Template</nz-form-label>
+          <nz-form-label>Spinning Wheel Template</nz-form-label>
           <div class="form-item-note">（JPG and PNG images within 1M limit）</div>
         </div>
 

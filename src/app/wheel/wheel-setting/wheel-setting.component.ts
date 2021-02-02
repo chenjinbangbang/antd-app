@@ -173,7 +173,14 @@ export class WheelSettingComponent implements OnInit {
     // console.log(control);
     let val = control.value;
 
+    console.log('--', this.prizeForm)
+
+    if (this.prizeForm && this.prizeForm.value.type === 'NOTHING') {
+      return null;
+    }
+
     if (val) {
+
       let reg = new RegExp(/[^\d;]/);
       if (reg.test(val)) {
         return { regError: true };
@@ -201,7 +208,7 @@ export class WheelSettingComponent implements OnInit {
         }
 
         // 中奖概率不能大于按总人数计算的赔率
-        if(arr[i] > this.form.value.lotteryCycle) {
+        if (arr[i] > this.form.value.lotteryCycle) {
           return { lotteryCycleError: true }
         }
       }
@@ -213,12 +220,29 @@ export class WheelSettingComponent implements OnInit {
           return { repeatAllError: true };
         }
       }
-
-
-
+    } else {
+      return { required: true }
     }
-    return null;
   }
+
+  // 每日份数校验
+  quantityValidator = (control: FormControl): ValidationErrors | null => {
+    // console.log(control);
+    let val = control.value;
+
+    if (this.prizeForm && this.prizeForm.value.type === 'NOTHING') {
+      return null;
+    }
+
+    if (!val) {
+      return { required: true };
+    }
+
+    return null;
+
+  }
+
+
 
   // 奖品设置表单数据
   prizeForm = this.fb.group({
@@ -229,8 +253,8 @@ export class WheelSettingComponent implements OnInit {
     imageUrl: ['', [Validators.required]],
     description: ['', [Validators.required, Validators.maxLength(500)]],
     entityImageUrls: this.fb.array([]),
-    winnerNumbers: ['', [Validators.required, Validators.maxLength(500), this.prizeRateValidator]],
-    everydayQuantity: ['', [Validators.required]],
+    winnerNumbers: ['', [this.prizeRateValidator]],
+    everydayQuantity: ['', [this.quantityValidator]],
     allQuantity: [''],
   })
   prizeId: string = ''
@@ -355,8 +379,8 @@ export class WheelSettingComponent implements OnInit {
       console.log('get the rotary table info details（获取某个活动详情）', res);
 
       // 处理图片
-      this.backgroundFileList = [res.backgroundImageUrl]
-      this.rotaryTableFileList = [res.rotaryTableImageUrl]
+      this.backgroundFileList = res.backgroundImageUrl ? [res.backgroundImageUrl] : []
+      this.rotaryTableFileList = res.rotaryTableImageUrl ? [res.rotaryTableImageUrl] : []
 
       // 处理奖品表格
       // this.prizeInfos = res.prizeInfos
@@ -434,7 +458,7 @@ export class WheelSettingComponent implements OnInit {
 
     console.log('选中城市', index);
 
-    if(index > -1) {
+    if (index > -1) {
       this.selectCityList.splice(index, 1);
       this.selectCityIds.splice(index, 1);
     } else {
@@ -459,11 +483,11 @@ export class WheelSettingComponent implements OnInit {
     //   this.getProvinceList(this.region_code);
     // })
 
-    
+
     this.selectCityList = JSON.parse(JSON.stringify(this.citys))
 
     let selectCityIds: number[] = [];
-    for(let item of this.selectCityList) {
+    for (let item of this.selectCityList) {
       selectCityIds.push(item.cityMunicipalityId);
     }
     this.selectCityIds = selectCityIds;
@@ -472,7 +496,7 @@ export class WheelSettingComponent implements OnInit {
   }
 
   // 保存城市
-  saveCity(){
+  saveCity() {
     this.isCityVisible = false;
     // for(let item of this.selectCityList) {
     //   this.citys.push(this.fb.control(item));
@@ -526,8 +550,8 @@ export class WheelSettingComponent implements OnInit {
     }
 
     this.form.patchValue({
-      backgroundImageUrl: this.backgroundFileList[0],
-      rotaryTableImageUrl: this.rotaryTableFileList[0]
+      backgroundImageUrl: this.backgroundFileList.length > 0 ? this.backgroundFileList[0] : '',
+      rotaryTableImageUrl: this.rotaryTableFileList.length > 0 ? this.rotaryTableFileList[0] : ''
     })
 
     console.log('校验是否通过', this.form.valid);
@@ -573,15 +597,15 @@ export class WheelSettingComponent implements OnInit {
         return this.message.error('Only one unwon prize can be set');
       }
 
-      if (!this.form.value.backgroundImageUrl) {
-        // 请上传背景模板实图
-        return this.message.error('Please upload Background Template');
-      }
+      // if (!this.form.value.backgroundImageUrl) {
+      //   // 请上传背景模板实图
+      //   return this.message.error('Please upload Background Template');
+      // }
 
-      if (!this.form.value.rotaryTableImageUrl) {
-        // 请上传转盘模板底图
-        return this.message.error('Please upload Spinning Wheel Template');
-      }
+      // if (!this.form.value.rotaryTableImageUrl) {
+      //   // 请上传转盘模板底图
+      //   return this.message.error('Please upload Spinning Wheel Template');
+      // }
 
       // 处理时间格式
       startDate = dateformat(startDate, 'yyyy-mm-dd');
@@ -603,7 +627,7 @@ export class WheelSettingComponent implements OnInit {
         cityMunicipalityIds
       }
 
-      if(this.rotaryTableId) {
+      if (this.rotaryTableId) {
         form.rotaryTableId = this.rotaryTableId
       }
 
@@ -649,6 +673,18 @@ export class WheelSettingComponent implements OnInit {
     console.log('imageUrlList', this.imageUrlList);
 
     this.prizeForm.patchValue(this.prizes[i]);
+  }
+
+  // 选中奖品类型
+  changePrizeType(val) {
+    console.log('changePrizeType', val)
+    if (val === 'NOTHING') {
+      this.prizeForm.patchValue({
+        winnerNumbers: '',
+        everydayQuantity: '',
+        allQuantity: ''
+      })
+    }
   }
 
   // 更新已经输入的中奖概率数组，不包括当前选中的奖品

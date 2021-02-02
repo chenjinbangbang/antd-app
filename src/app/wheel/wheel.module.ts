@@ -9,10 +9,10 @@ import { ApiService } from 'src/app/service/api.service';
 import { CommonService } from 'src/app/service/common.service';
 import { WheelService } from 'src/app/service/wheel.service';
 
-import { WheelComponent } from 'src/app/pages/wheel/wheel/wheel.component';
-import { WheelSettingComponent } from 'src/app/pages/wheel/wheel-setting/wheel-setting.component';
-import { WheelResultComponent } from 'src/app/pages/wheel/wheel-result/wheel-result.component';
-import { CandyListComponent } from 'src/app/pages/wheel/candy-list/candy-list.component';
+import { WheelComponent } from 'src/app/wheel/wheel/wheel.component';
+import { WheelSettingComponent } from 'src/app/wheel/wheel-setting/wheel-setting.component';
+import { WheelResultComponent } from 'src/app/wheel/wheel-result/wheel-result.component';
+import { CandyListComponent } from 'src/app/wheel/candy-list/candy-list.component';
 
 const routes: Routes = [
   { path: '', component: WheelComponent },

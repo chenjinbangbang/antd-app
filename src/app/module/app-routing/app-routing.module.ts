@@ -4,14 +4,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 // import { RouteGuard } from 'src/app/guard/route.guard';
 
-import { HomeComponent } from 'src/app/pages/home/home.component';
-import { IndexComponent } from 'src/app/pages/wheel/index/index.component'; // 大转盘
-// import { WheelComponent } from 'src/app/pages/wheel/wheel/wheel.component';
-// import { WheelSettingComponent } from 'src/app/pages/wheel/wheel-setting/wheel-setting.component';
-// import { WheelResultComponent } from 'src/app/pages/wheel/wheel-result/wheel-result.component';
-// import { ActivityComponent } from 'src/app/pages/activity/activity.component';
+import { HomeComponent } from 'src/app/home/home.component';
+import { IndexComponent } from 'src/app/wheel/index/index.component'; // 大转盘
 
-import { AccountIndexComponent } from 'src/app/pages/system-account/account-index/account-index.component'; // 系统账号
+import { AccountIndexComponent } from 'src/app/system-account/account-index/account-index.component'; // 系统账号
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,12 +19,12 @@ const routes: Routes = [
     //   { path: 'wheel-setting', component: WheelSettingComponent },
     //   { path: 'wheel-result', component: WheelResultComponent },
     // ]
-    loadChildren: () => import('../../pages/wheel/wheel.module').then(m => m.WheelModule)
+    loadChildren: () => import('../../wheel/wheel.module').then(m => m.WheelModule)
   },
   {
     path: 'system-account',
     component: AccountIndexComponent,
-    loadChildren: () => import('../../pages/system-account/system-account.module').then(m => m.SystemAccountModule)
+    loadChildren: () => import('../../system-account/system-account.module').then(m => m.SystemAccountModule)
   }
   // { path: 'wheel-setting', component: WheelSettingComponent, canDeactivate: [RouteGuard] },
   // { path: 'activity', component: ActivityComponent },
