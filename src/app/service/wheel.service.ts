@@ -107,6 +107,7 @@ export class WheelService {
   // get the rotary table user lottery page（获取大转盘抽奖结果）
   getLottery(data): Observable<any> {
     return this.raffleService.get(`/setting/v1/rotary/table/user/lottery`, data).map(res => {
+      console.log('======', res)
       return res.data;
     })
   }

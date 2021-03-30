@@ -151,8 +151,8 @@ export class WheelResultComponent implements OnInit {
     }
 
     if (date.length > 0) {
-      params.beginDate = dateformat(date[0], 'yyyy-mm-dd hh:MM:ss')
-      params.endDate = dateformat(date[1], 'yyyy-mm-dd hh:MM:ss')
+      params.beginDate = dateformat(date[0], 'yyyy-mm-dd HH:MM:ss')
+      params.endDate = dateformat(date[1], 'yyyy-mm-dd HH:MM:ss')
     }
 
     delete params.date;

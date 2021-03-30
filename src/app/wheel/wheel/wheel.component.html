@@ -54,7 +54,7 @@
 					<!-- ENABLED, DISABLED enabled, disabled -->
           <td class="operation">
             <!-- 全部转盘活动都停止的情况下才会显示开启按钮 -->
-            <button nz-button nzType="primary" (click)="startFn(item.rotaryTableId)" *ngIf="isAllStop">Start</button>
+            <button nz-button nzType="primary" (click)="startFn(item.rotaryTableId)" *ngIf="item.status === 'DISABLED'">Start</button>
             <button nz-button nzType="danger" (click)="stopFn(item.rotaryTableId)" *ngIf="item.status === 'ENABLED'">Stop</button>
             <button nz-button nzType="primary" (click)="editFn(item.rotaryTableId)">Edit</button>
             <button nz-button class="btn-success" (click)="resultFn(item.rotaryTableId)">Participation Record</button>

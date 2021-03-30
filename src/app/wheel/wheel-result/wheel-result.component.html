@@ -178,8 +178,8 @@
           <td>{{item.status}}</td>
           <td>
             <button nz-button (click)="showconfirmDelivered(item.rotaryTableId)"
-              *ngIf="item.status === 'Collected'; then other">Delivery Confirm</button>
-            <span #other>{{item.description}}</span>
+              *ngIf="item.status === 'Collected'; else other">Delivery Confirm</button>
+            <ng-template #other>{{item.description}}</ng-template>
           </td>
         </tr>
       </tbody>

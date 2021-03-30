@@ -46,7 +46,7 @@ export class ConfigService {
           httpOptions.params = params;
           // console.log('请求参数；',httpOptions)
           this.http.get(url, httpOptions).subscribe((res: any) => {
-            // console.log('响应数据', res);
+            console.log('响应数据：', res);
 
             // 导出excel
             if (url.includes('/setting/v1/rotary/table/user/lottery/export')) {

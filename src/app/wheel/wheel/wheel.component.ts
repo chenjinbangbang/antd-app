@@ -21,7 +21,7 @@ export class WheelComponent implements OnInit {
   //   2: "停用",
   //   3: "删除"
   // }
-  isAllStop: boolean = false; // 是否全部转盘活动都停止
+  // isAllStop: boolean = false; // 是否全部转盘活动都停止
 
   isVisible: boolean = false; // 模态框
   modalContent: string = ""; // 模态框标题
@@ -98,9 +98,9 @@ export class WheelComponent implements OnInit {
     this.wheelService.getRotaryTable(params).subscribe(res => {
       console.log('get the rotary table page（获取大转盘列表）', res);
 
-      this.isAllStop = res.data.every(item => {
-        return item.status === 'DISABLED'
-      });
+      // this.isAllStop = res.data.every(item => {
+      //   return item.status === 'DISABLED'
+      // });
 
       this.lists = res.data;
       this.total = res.total_counts;

@@ -309,6 +309,9 @@ export class WheelSettingComponent implements OnInit {
   loading: boolean = false; // 加载中
   isVisible: boolean = false; // 奖品模态框
 
+  activeVisible: boolean = false;// 有active的活动时弹框
+
+
   constructor(
     private modal: NzModalService,
     private message: NzMessageService,
@@ -332,28 +335,28 @@ export class WheelSettingComponent implements OnInit {
         // 初始化奖品列表
         let prizes: any[] = [];
         for (let i = 0; i < 8; i++) {
-          // prizes.push({
-          //   allQuantity: '',
-          //   amount: '',
-          //   description: "",
-          //   entityImageUrls: [],
-          //   everydayQuantity: '',
-          //   imageUrl: "",
-          //   name: "",
-          //   type: null,
-          //   winnerNumbers: "",
-          // })
           prizes.push({
-            allQuantity: 100,
-            amount: 30,
-            description: "奖品描述奖品描述",
+            allQuantity: '',
+            amount: '',
+            description: "",
             entityImageUrls: [],
-            everydayQuantity: 20,
-            imageUrl: "https://d2fcenhuvgkdg9.cloudfront.net/default/71b18853-1fbc-4deb-99ba-6a981bb2f6ee.jpg",
-            name: "华为meta40",
-            type: "ENTITY",
-            winnerNumbers: `10${i};20${i}`,
+            everydayQuantity: '',
+            imageUrl: "",
+            name: "",
+            type: null,
+            winnerNumbers: "",
           })
+          // prizes.push({
+          //   allQuantity: 100,
+          //   amount: 30,
+          //   description: "奖品描述奖品描述",
+          //   entityImageUrls: [],
+          //   everydayQuantity: 20,
+          //   imageUrl: "https://d2fcenhuvgkdg9.cloudfront.net/default/71b18853-1fbc-4deb-99ba-6a981bb2f6ee.jpg",
+          //   name: "华为meta40",
+          //   type: "ENTITY",
+          //   winnerNumbers: `10${i};20${i}`,
+          // })
         }
         this.prizes = prizes;
       }
@@ -597,6 +600,16 @@ export class WheelSettingComponent implements OnInit {
         return this.message.error('Only one unwon prize can be set');
       }
 
+      // 中奖概率不能大于按总人数计算的赔率
+      for(let item of this.prizes) {
+        let arr = item.winnerNumbers.split(';');
+        for(let item of arr) {
+          if(item > this.form.value.lotteryCycle) {
+            return this.message.error('The sequential number of "Probability of Winning" should be less than or equal to "Odds by total number of people"');
+          }
+        }
+      }
+
       // if (!this.form.value.backgroundImageUrl) {
       //   // 请上传背景模板实图
       //   return this.message.error('Please upload Background Template');
@@ -610,10 +623,10 @@ export class WheelSettingComponent implements OnInit {
       // 处理时间格式
       startDate = dateformat(startDate, 'yyyy-mm-dd');
       endDate = dateformat(endDate, 'yyyy-mm-dd');
-      startTime = dateformat(startTime, 'hh:MM:ss');
-      endTime = dateformat(endTime, 'hh:MM:ss');
-      prepareStartDate = dateformat(prepareStartDate, 'yyyy-mm-dd hh:MM:ss');
-      prepareEndDate = dateformat(prepareEndDate, 'yyyy-mm-dd hh:MM:ss');
+      startTime = dateformat(startTime, 'HH:MM:ss');
+      endTime = dateformat(endTime, 'HH:MM:ss');
+      prepareStartDate = dateformat(prepareStartDate, 'yyyy-mm-dd HH:MM:ss');
+      prepareEndDate = dateformat(prepareEndDate, 'yyyy-mm-dd HH:MM:ss');
 
       let form = {
         ...this.form.value,
@@ -746,6 +759,11 @@ export class WheelSettingComponent implements OnInit {
         return this.message.error('Please upload Thumbnail');
       }
     }
+  }
+
+  // 当活活动会变成closed状态，同时新增加的活动变成active状态
+  confirmActive(){
+    
   }
 
 

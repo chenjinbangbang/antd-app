@@ -125,8 +125,8 @@ export class TopupRecordComponent implements OnInit {
     }
 
     if (date.length > 0) {
-      params.startTime = dateformat(date[0], 'yyyy-mm-dd hh:MM:ss')
-      params.endTime = dateformat(date[1], 'yyyy-mm-dd hh:MM:ss')
+      params.startTime = dateformat(date[0], 'yyyy-mm-dd HH:MM:ss')
+      params.endTime = dateformat(date[1], 'yyyy-mm-dd HH:MM:ss')
     }
 
     delete params.date;
