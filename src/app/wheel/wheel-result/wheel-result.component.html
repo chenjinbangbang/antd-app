@@ -96,9 +96,16 @@
 			</nz-form-item> -->
 
       <nz-form-item>
-        <nz-form-label>User Account</nz-form-label>
+        <nz-form-label>User Id</nz-form-label>
         <nz-form-control>
-          <input nz-input formControlName="username" placeholder="Input User Account" />
+          <input nz-input formControlName="userId" placeholder="Input User Id" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>User Name</nz-form-label>
+        <nz-form-control>
+          <input nz-input formControlName="username" placeholder="Input User Name" />
         </nz-form-control>
       </nz-form-item>
 
@@ -132,22 +139,24 @@
 
       <nz-form-item>
         <nz-form-control>
-          <button nz-button nzType="primary">Search</button>
+          <button nz-button nzType="primary" style="margin-right: 20px;">Search</button>
+          <button nz-button nzType="primary" (click)="exportFn()" [nzLoading]="exportLoading">Export</button>
         </nz-form-control>
       </nz-form-item>
     </form>
   </div>
 
   <div class="table">
-    <div class="table-top">
+    <!-- <div class="table-top">
       <button nz-button nzType="primary" (click)="exportFn()" [nzLoading]="exportLoading">Export</button>
-    </div>
+    </div> -->
     <nz-table [nzData]="lists" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" nzPageSize="10" [nzTotal]="total" [nzLoading]="loading"
       [nzBordered]="true" [nzShowQuickJumper]="true" (nzPageIndexChange)="changePage($event)">
       <thead>
         <tr>
           <th>Activity</th>
-          <th>User Account</th>
+          <!-- <th>User Id</th> -->
+          <th>Tel</th>
           <th>User Name</th>
           <th>Participating Time</th>
           <th>Prize Type</th>
@@ -161,7 +170,8 @@
       <tbody>
         <tr *ngFor="let item of lists; let i=index">
           <td>{{item.title}}</td>
-          <td>{{item.userId}}</td>
+          <!-- <td>{{item.userId}}</td> -->
+          <td>{{item.phone}}</td>
           <td>{{item.username || ''}}</td>
           <td>{{item.createdTime}}</td>
           <td>{{goodsTypeData[item.type]}}</td>
@@ -171,7 +181,7 @@
           </td>
           <td>
             <p>Addressee：{{item.recipients}}</p>
-            <p>Tel：{{item.phone}}</p>
+            <!-- <p>Tel：{{item.phone}}</p> -->
             <p>Addr：{{item.address}}</p>
             <p>province：{{item.provinceName}}</p>
           </td>

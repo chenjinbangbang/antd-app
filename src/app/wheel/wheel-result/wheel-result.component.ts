@@ -17,6 +17,7 @@ export class WheelResultComponent implements OnInit {
     type: [''],
     status: [''],
     // addressStatus: [''],
+    userId: [''],
     username: [''],
     name: [''],
     phone: [''],
